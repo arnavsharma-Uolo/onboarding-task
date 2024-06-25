@@ -19,7 +19,7 @@ export const controllerWrapper = (fn: ControllerFunction): ControllerFunction =>
           if (error.errors.length === 1) {
             errorMessages = error.errors[0].message;
           } else errorMessages = JSON.stringify(error.errors.map((error) => error.message));
-          res.status(400).json(build_response(false, 'Invalid Payload', errorMessages, null));
+          res.status(400).json(build_response(false, 'Invalid Payload', errorMessages, null, null));
         }
       } else {
         next(error);
