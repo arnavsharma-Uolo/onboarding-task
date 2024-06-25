@@ -45,7 +45,10 @@
       <p>Made with ❤️ by <a href="https://www.linkedin.com/in/arnavsharma2711/" target="_blank">@arnavsharma2711</a></p>
     </footer>
     <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
+      const yearElement = document.getElementById('year');
+      if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+      }
     </script>
   </body>
 </html>
