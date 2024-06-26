@@ -6,6 +6,7 @@ function Header () {
   return (
     <header className={classes.Header}>
       <div className={classes.HeaderContent}>
+        <div className={classes.HeaderHamburger}>|||</div>
         <img src={logo} className="Logo" alt="Logo" />
         <Profile />
       </div>

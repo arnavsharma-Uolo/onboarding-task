@@ -1,6 +1,5 @@
 .Profile {
-  padding-left: 30px;
-  padding-right: 30px;
+  position: relative;
 }
 
 .ProfileContent {
@@ -8,9 +7,13 @@
   gap: 20px;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
+  border-radius: 10px;
 }
 
+.ProfileContent:hover {
+  background: #F6F6F6;
+}
 .ProfileText {
   font-family: 'Open Sans', sans-serif;
   font-size: 18px;
@@ -18,4 +21,32 @@
   line-height: 24px;
   letter-spacing: 0.10000000149011612px;
   text-align: left;
+}
+.Modal {
+  position:absolute;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 5px;
+  width: 100%;
+  right: 0;
+  top: 80%;
+  padding: 10px;
+  background: #F6F6F6;
+  border: 1px solid #E2E2E2;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px 0px #0000000D;
+  z-index: 100;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 19.07px;
+  letter-spacing: 0.44999998807907104px;
+  text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+  .ProfileText {
+    display: none;
+  }
 }

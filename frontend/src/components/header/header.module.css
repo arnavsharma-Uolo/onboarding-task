@@ -10,3 +10,6 @@
   align-items: center;
   padding: 10px;
 }
+.HeaderHamburger {
+  display: none;
+}

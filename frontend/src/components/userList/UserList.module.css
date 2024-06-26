@@ -24,8 +24,8 @@
 	border-radius: 16px 16px 0px 0px;
 }
 .UserListItemContent {
-	padding: 20px;
 	width: 288px;
+	padding: 20px;
 	border: 1px solid #E2E2E2;
 	display: flex;
 	flex-direction: column;
@@ -72,4 +72,18 @@
 
 .DeleteButton:hover {
 	color: #FF0000;
+}
+
+@media screen and (max-width: 768px) {
+	.UserListContainer {
+		gap: 5px;
+	}
+	.UserListItemImage {
+		width: 180px;
+	}
+	.UserListItemContent {
+		width: 160px;
+		padding: 10px;
+		font-size: 14px;
+	}
 }

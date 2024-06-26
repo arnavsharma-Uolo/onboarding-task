@@ -1,15 +1,20 @@
-import classes from  './sidebar.module.css';
+import React from 'react';
+import { Link, useLocation } from "react-router-dom";
+import classes from './sidebar.module.css';
 
-function SidebarItem ({ icon, title, active }) {
+function SidebarItem({ link, icon, title }) {
+  const location = useLocation();
+  const isActive = location.pathname === link;
+
   return (
-    <div className={active ? `${classes.SidebarItemActive} && ${classes.SidebarItemContent}` : classes.SidebarItemContent}>
-      <div className={active ? classes.IconActive : ''}>
+    <Link to={link} className={isActive ? `${classes.SidebarItemContent} ${classes.SidebarItemActive}` : classes.SidebarItemContent}>
+      <div className={isActive ? classes.IconActive : ''}>
         {icon}
       </div>
       <div className={classes.SidebarItemText}>
         {title}
       </div>
-    </div>
+    </Link>
   );
 }
 
