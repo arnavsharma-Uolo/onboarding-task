@@ -1,6 +1,51 @@
 .UserListContainer {
-  
+	min-height: 70vh;
+	padding-top: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
 }
-.UserListItem {
-  
+
+.UserListItemContainer {
+	margin: auto;
+	margin-top: 10px;
+	border-radius: 16px;
+	background: #F6F6F6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.UserListItemImage {
+	width: 330px;
+	height: auto;
+	object-fit: contain;
+	border-radius: 16px 16px 0px 0px;
+}
+.UserListItemContent {
+	padding: 20px;
+	width: 288px;
+	border: 1px solid #E2E2E2;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: center;
+	border-radius: 0px 0px 16px 16px;
+	font-family: 'Outfit', sans-serif;
+	font-size: 22px;
+	font-weight: 400;
+	line-height: 27.72px;
+}
+.Bold {
+	font-weight: 700;
+}
+.UserListItemContent p{
+	margin: 0;
+}
+.EmptyContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	margin: auto;
 }

@@ -12,6 +12,7 @@
   padding: 12px 16px;
   gap: 10px;
   opacity: 0px;
+  color: #667085;
 }
 .SidebarItemText {
   font-family: 'Open Sans', sans-serif;
@@ -20,9 +21,11 @@
   line-height: 20px;
   letter-spacing: 0.25px;
   text-align: left;
-  color: #667085;
 }
 .SidebarItemActive {
-  background: rgba(86, 31, 231, 0.1);
+  background: rgba(171, 167, 179, 0.1);
+  color: #561FE7;
+}
+.SidebarItemIconActive {
   color: #561FE7;
 }

@@ -23,7 +23,7 @@ expressApp.get('/', (_req, res) => {
 });
 
 // Serve static files
-expressApp.use(express.static(path.join(__dirname, '../public')));
+expressApp.use('/images', express.static('public/images'));
 
 // Importing API routes
 import apiRoutes from './route';
