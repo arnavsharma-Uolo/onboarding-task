@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import classes from  './UserList.module.css';
 import UserListItem from './userListItem';
 import Pagination from '../pagination/pagination';
@@ -8,7 +8,7 @@ function UserList ({searchQuery}) {
   const [currPage, setcurrPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -25,11 +25,11 @@ function UserList ({searchQuery}) {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [searchQuery, currPage]);
 
   useEffect(() => {
     fetchData();
-  }, [currPage, searchQuery]);
+  }, [fetchData]);
 
   const refreshData = () => {
     fetchData();
