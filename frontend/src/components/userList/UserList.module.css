@@ -7,6 +7,7 @@
 }
 
 .UserListItemContainer {
+	position: relative;
 	margin: auto;
 	margin-top: 10px;
 	border-radius: 16px;
@@ -48,4 +49,27 @@
 	justify-content: center;
 	text-align: center;
 	margin: auto;
+}
+
+.DeleteButton {
+	width: 45px;
+	height: 45px;
+	position: absolute;
+	margin-left: 10px;
+	top: 0;
+	right: 0;
+	background: #fefefe;
+	border: 1px solid #E2E2E2;
+	opacity: 0;
+	transition: opacity 0.3s;
+	border-radius: 0px 16px 0px 16px;
+	font-size: large;
+}
+
+.UserListItemContainer:hover .DeleteButton {
+	opacity: 1;
+}
+
+.DeleteButton:hover {
+	color: #FF0000;
 }

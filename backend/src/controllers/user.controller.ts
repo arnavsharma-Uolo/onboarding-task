@@ -39,16 +39,16 @@ export const addUser = controllerWrapper(async (req, res) => {
 
 // DELETE /api/v1/user/:id
 export const deleteUser = controllerWrapper(async (req, res) => {
-  const { id } = deleteUserSchema.parse(req.params);
+    const { id } = deleteUserSchema.parse(req.params);
 
-  const index = USER_LIST.findIndex((user) => user.id === id);
+    const index = USER_LIST.findIndex((user) => user.id === id);
 
-  if (index === -1) {
-    res.status(404).json(build_response(false, 'User not found', null, null, null));
-    return;
-  }
+    if (index === -1) {
+      res.status(404).json(build_response(false, 'User not found', null, null, null));
+      return;
+    }
 
-  USER_LIST.splice(index, 1);
+    USER_LIST.splice(index, 1);
 
-  res.status(200).json(build_response(true, 'User deleted', null, null, null));
+    res.status(200).json(build_response(true, 'User deleted', null, null, null));
 });

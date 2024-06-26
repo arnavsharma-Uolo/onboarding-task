@@ -16,7 +16,7 @@ const build_response = (success: boolean, message: string, error?: null | string
     response.error = error;
   }
 
-  if (total_count !== undefined) {
+  if (total_count !== null) {
     response.total_count = total_count;
   }
 
