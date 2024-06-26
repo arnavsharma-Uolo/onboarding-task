@@ -1,0 +1,21 @@
+.Profile {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.ProfileContent {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.ProfileText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.10000000149011612px;
+  text-align: left;
+}
