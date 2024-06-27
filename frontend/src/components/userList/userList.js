@@ -4,8 +4,8 @@ import UserListItem from './userListItem';
 import Pagination from '../pagination/pagination';
 
 function UserList ({searchQuery}) {
-  const [userData, setuserData] = useState([]);
-  const [currPage, setcurrPage] = useState(1);
+  const [userData, setUserData] = useState([]);
+  const [currPage, setCurrPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchData = useCallback(async () => {
@@ -20,8 +20,13 @@ function UserList ({searchQuery}) {
     try {
       const response = await fetch(`http://localhost:8000/api/v1/user?q=${searchQuery}&page_number=${currPage}&limit=8`, requestOptions);
       const result = await response.json();
-      setuserData(result.data);
-      setTotalPages(Math.ceil(result.total_count/8));
+      setUserData(result.data);
+
+      const pageCount = Math.ceil(result.total_count/8);
+      setTotalPages(pageCount);
+
+      if(currPage > pageCount)
+        setCurrPage(1);
     } catch (error) {
       console.error(error);
     }
@@ -56,7 +61,7 @@ function UserList ({searchQuery}) {
         )}
       </div>
       <div>
-        <Pagination currPage={currPage} setcurrPage={setcurrPage} totalPages={totalPages} />
+        <Pagination currPage={currPage} setCurrPage={setCurrPage} totalPages={totalPages} />
       </div>
     </>
   );

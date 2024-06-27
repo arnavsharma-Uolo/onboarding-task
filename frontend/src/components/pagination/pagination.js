@@ -1,11 +1,11 @@
 import classes from './Pagination.module.css';
 
-function Pagination({ currPage, setcurrPage, totalPages }) {
+function Pagination({ currPage, setCurrPage, totalPages }) {
   return (
     <div className={classes.Pagination}>
       <button 
         className={classes.PaginationButton} 
-        onClick={() => setcurrPage(currPage > 1 ? currPage - 1 : 1)}
+        onClick={() => setCurrPage(currPage > 1 ? currPage - 1 : 1)}
         disabled={totalPages === 0}
       >
         {'<'}
@@ -14,14 +14,14 @@ function Pagination({ currPage, setcurrPage, totalPages }) {
         <button
           key={index}
           className={index+1 === currPage ? `${classes.PaginationButton} && ${classes.PaginationButtonActive}` : classes.PaginationButton}
-          onClick={() => setcurrPage(index + 1)}
+          onClick={() => setCurrPage(index + 1)}
         >
           {index + 1}
         </button>
       ))}
       <button 
         className={classes.PaginationButton} 
-        onClick={() => setcurrPage(currPage < totalPages ? currPage + 1 : totalPages)}
+        onClick={() => setCurrPage(currPage < totalPages ? currPage + 1 : totalPages)}
         disabled={totalPages === 0}
       >
         {'>'}

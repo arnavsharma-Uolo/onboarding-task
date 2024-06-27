@@ -14,8 +14,10 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
     try {
       const response = await fetch(`http://localhost:8000/api/v1/user/${id}`, requestOptions);
       const result = await response.json();
-      console.log(result);
-      onDeleted();
+      if(response.status === 200)
+        onDeleted();
+      else
+        console.error(result.message);
     } catch (error) {
       console.error(error);
     }

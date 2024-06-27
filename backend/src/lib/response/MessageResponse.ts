@@ -6,7 +6,13 @@ export interface MessageResponse {
   data?: null | object | unknown[];
 }
 
-const build_response = (success: boolean, message: string, error?: null | string, total_count?: null | number, data?: null | object | unknown[]): MessageResponse => {
+const build_response = (
+  success: boolean,
+  message: string,
+  error?: null | string,
+  total_count?: null | number,
+  data?: null | object | unknown[],
+): MessageResponse => {
   const response: MessageResponse = {
     success,
     message,

@@ -9,7 +9,6 @@ function Profile() {
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
-    console.log('Modal visibility:', isModalOpen);
   };
 
   return (
