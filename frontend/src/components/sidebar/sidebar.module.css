@@ -4,7 +4,9 @@
   width: 20vw;
   padding: 16px 0px 16px 0px;
   font-weight: 600;
+  background: #ffffff;
   box-shadow: 4px 0px 4px 0px #0000000D;
+  z-index: 2;
 }
 .SidebarItemContent {
   height: 48px;

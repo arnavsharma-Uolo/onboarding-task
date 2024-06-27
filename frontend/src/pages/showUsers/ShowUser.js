@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import UserList from '../../components/userList/userList';
 import classes from './ShowUser.module.css';
 import useDebounce from '../../lib/debounce';
-import { ReactComponent as SeachIcon } from '../../assets/search_icon.svg';
+import { ReactComponent as SearchIcon } from '../../assets/search_icon.svg';
 
 
 function ShowUser() {
@@ -18,11 +18,11 @@ function ShowUser() {
   }, [searchQuery], 500);
 
   return (
-    <div className={classes.ShowUserContainter}>
+    <div className={classes.ShowUserContainer}>
       <p className={classes.Heading}>Our Team</p>
       <div>
         <div className={classes.SearchInputContainer}>
-          <SeachIcon className={classes.SearchIcon}/>
+          <SearchIcon className={classes.SearchIcon}/>
           <input
             className={classes.SearchInput}
             type="text"

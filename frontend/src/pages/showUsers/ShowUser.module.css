@@ -1,6 +1,7 @@
-.ShowUserContainter {
-  margin: 25px;
+.ShowUserContainer {
+  padding: 25px;
   height: 100%;
+  background: #ffffff;
 }
 .Heading {
   font-family: 'Outfit', sans-serif;

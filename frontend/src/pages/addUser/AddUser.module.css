@@ -1,0 +1,121 @@
+.AddUserContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 25px;
+  height: 100%;
+}
+.Heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 40.32px;
+  letter-spacing: 0.25px;
+  text-align: center;
+  color: #101828;
+}
+.FormContainer {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  width: 450px;
+  background: #FFFFFF;
+  border: 1px solid #EAECF0;
+  border-radius: 16px;
+}
+.FieldsContainer {
+  padding: 20px;
+}
+.ImageContainer {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  background: #FFF8E7;
+  border-radius: 50%;
+  margin: 10px;
+  padding: 20px;
+}
+.Image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+.InputContainer{
+  margin: 10px;
+}
+.InputText {
+  padding-bottom:5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.15000000596046448px;
+  text-align: left;
+  color: #344054;
+}
+.InputText span {
+  color: red;
+}
+.Input {
+  width: 90%;
+  border: 1px solid #D0D5DD;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.ActionContainer {
+  display: flex;
+  justify-content:right;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  border-top: 1px solid #EAECF0;
+}
+.Button {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.15000000596046448px;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px 40px;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px;
+  background: transparent;
+}
+.CancelButton {
+  border: 1px solid #561FE7;
+  color: #561FE7;
+}
+.SaveButton {
+  background: #561FE7;
+  color: #ffffff;
+}
+
+
+.DownloadButton {
+  padding: 5px;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	margin-right: 10px;
+	bottom: 0;
+	right: 0;
+	background: #ffffff;
+	border: 2px solid #E2E2E2;
+	border-radius: 50%;
+	font-size: large;
+}
+
+.Subtext {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16.34px;
+  letter-spacing: 0.4000000059604645px;
+  text-align: left;
+  color: #667085;
+}

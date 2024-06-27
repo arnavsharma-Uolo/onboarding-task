@@ -8,6 +8,7 @@
 .AppContainer {
   display: flex;
   flex: 1;
+  background: #f3f3f3;
 }
 .AppContent {
   flex: 1;
