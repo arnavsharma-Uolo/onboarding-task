@@ -29,7 +29,8 @@ const handleSubmit = async () => {
     body: JSON.stringify({
       name,
       email,
-      password
+      password,
+      image: "https://picsum.photos/500/500",
     }),
     redirect: "follow"
   };

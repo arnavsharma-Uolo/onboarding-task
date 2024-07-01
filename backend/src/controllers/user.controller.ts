@@ -1,21 +1,13 @@
-import { USER_LIST } from '../constants';
 import { controllerWrapper } from '../lib/controllerWrapper';
-import { CustomError } from '../lib/error/custom.error';
 import build_response from '../lib/response/MessageResponse';
 import { addUserSchema, deleteUserSchema, getUserListSchema } from '../lib/zod/user.schema';
+import { addUserService, deleteUserService, getUsersService } from '../services/user.service';
 
 // GET /api/v1/user
 export const getUsers = controllerWrapper(async (req, res) => {
   const { q, page_number, limit } = getUserListSchema.parse(req.query);
 
-  const startIndex = (page_number - 1) * limit;
-  const endIndex = startIndex + limit;
-  const filteredList = q
-    ? USER_LIST.filter((user) => user.name.toLowerCase().includes(q.toLowerCase()) || user.email.toLowerCase().includes(q.toLowerCase()))
-    : USER_LIST;
-
-  const total_count = filteredList.length;
-  const user_data_list = filteredList.slice(startIndex, endIndex);
+  const { total_count, user_data_list } = await getUsersService(q, page_number, limit);
 
   res.status(200).json(build_response(true, 'Users List Fetched', null, total_count, user_data_list));
 });
@@ -24,14 +16,8 @@ export const getUsers = controllerWrapper(async (req, res) => {
 export const addUser = controllerWrapper(async (req, res) => {
   const { name, email, image } = addUserSchema.parse(req.body);
 
-  const newUser = {
-    id: USER_LIST.length + 1,
-    name,
-    email,
-    image,
-  };
+  const newUser = await addUserService(name, email, image);
 
-  USER_LIST.push(newUser);
   res.status(201).json(build_response(true, 'New User Added', null, null, newUser));
 });
 
@@ -39,11 +25,7 @@ export const addUser = controllerWrapper(async (req, res) => {
 export const deleteUser = controllerWrapper(async (req, res) => {
   const { id } = deleteUserSchema.parse(req.params);
 
-  const index = USER_LIST.findIndex((user) => user.id === id);
+  await deleteUserService(id);
 
-  if (index === -1)
-    throw new CustomError(404, 'User Not Found', 'User with id: ${id} does not exist in the database');
-
-  USER_LIST.splice(index, 1);
   res.status(200).json(build_response(true, 'User deleted', null, null, null));
 });
