@@ -1,6 +1,5 @@
 .ShowUserContainer {
   padding: 25px;
-  height: 100%;
   background: #ffffff;
 }
 .Heading {
@@ -54,4 +53,10 @@
   line-height: 21.79px;
   text-align: center;
   color: #101828;
+  transition: all 0.3s ease;
+}
+
+.SearchButton:hover {
+  background: #D0D5DD;
+  cursor: pointer;
 }

@@ -20,6 +20,10 @@ function UserList ({searchQuery}) {
     try {
       const response = await fetch(`http://localhost:8000/api/v1/user?q=${searchQuery}&page_number=${currPage}&limit=8`, requestOptions);
       const result = await response.json();
+      
+      if(result.success === false)
+        throw new Error(response.message);
+
       setUserData(result.data);
 
       const pageCount = Math.ceil(result.total_count/8);

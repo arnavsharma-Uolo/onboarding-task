@@ -2,6 +2,7 @@ import classes from './Pagination.module.css';
 
 function Pagination({ currPage, setCurrPage, totalPages }) {
   return (
+    totalPages > 0 ? 
     <div className={classes.Pagination}>
       <button 
         className={classes.PaginationButton} 
@@ -26,7 +27,7 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
       >
         {'>'}
       </button>
-    </div>
+    </div> : <div className={classes.Pagination}></div>
   );
 }
 

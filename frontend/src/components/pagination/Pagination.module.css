@@ -14,9 +14,11 @@
   border: 1px solid #E2E2E2;
   border-radius: 8px;
   color: #000;
+  transition: all 0.3s ease;
 }
 .PaginationButton:hover {
   background: #581fe753;
+  cursor: pointer;
 }
 
 .PaginationButtonActive {

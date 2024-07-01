@@ -16,9 +16,7 @@ export const controllerWrapper = (fn: ControllerFunction): ControllerFunction =>
       } else if (error instanceof ZodError) {
         let errorMessages = error.message;
         if (error instanceof ZodError) {
-          if (error.errors.length === 1) {
-            errorMessages = error.errors[0].message;
-          } else errorMessages = JSON.stringify(error.errors.map((error) => error.message));
+          errorMessages = error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ');
           res.status(400).json(build_response(false, 'Invalid Payload', errorMessages, null, null));
         }
       } else {

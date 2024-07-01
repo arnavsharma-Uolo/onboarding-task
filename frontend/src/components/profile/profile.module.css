@@ -9,6 +9,8 @@
   align-items: center;
   padding: 10px;
   border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .ProfileContent:hover {

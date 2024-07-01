@@ -29,8 +29,11 @@ expressApp.use('/images', express.static('public/images'));
 import apiRoutes from './route';
 expressApp.use('/api', apiRoutes);
 
-// Use custom middlewares for handling 404 and errors
+// Custom Middleware
+// Handle invalid routes
 expressApp.use(handleNotFound);
+
+// Handle errors
 expressApp.use(handleError);
 
 export default expressApp;

@@ -7,6 +7,7 @@
   background: #ffffff;
   box-shadow: 4px 0px 4px 0px #0000000D;
   z-index: 2;
+  transition: all 0.3s ease;
 }
 .SidebarItemContent {
   height: 48px;
@@ -16,6 +17,7 @@
   padding: 12px 16px;
   gap: 10px;
   color: #667085;
+  transition: all 0.5s ease;
 }
 .SidebarItemText {
   font-family: 'Open Sans', sans-serif;

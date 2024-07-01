@@ -119,3 +119,21 @@
   text-align: left;
   color: #667085;
 }
+.SaveButton:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+.ActionMessageShow {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16.34px;
+  letter-spacing: 0.4000000059604645px;
+  text-align: right;
+  color: red;
+  display: block;
+}
+.ActionMessageHide {
+  display: none;
+}
