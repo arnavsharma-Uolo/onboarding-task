@@ -35,7 +35,6 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
             className={classes.UserListItemImage}
             src={picture.startsWith("http") ? picture : `http://localhost:8000${picture}`}
             alt={email}
-            crossOrigin="anonymous"
             onError={() => setImageError(true)}
             loading='lazy'
           />

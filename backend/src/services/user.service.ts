@@ -5,13 +5,13 @@ import { addFiles, getFileURL } from './s3.service';
 
 export const getUsersService = async (q: string = '', page_number: number, limit: number) => {
   const startIndex = (page_number - 1) * limit;
-
-  let filter = {};
+  let filter: any = { deleted_at: null };
   if (q) {
     const regex = new RegExp(q, 'i');
-    filter = {
-      $or: [{ name: { $regex: regex } }, { email: { $regex: regex } }],
-    };
+    filter.$or = [
+      { name: { $regex: regex } },
+      { email: { $regex: regex } }
+    ];
   }
 
   const total_count = await User.countDocuments(filter);

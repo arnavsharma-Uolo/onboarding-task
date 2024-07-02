@@ -54,8 +54,8 @@ function UserList ({searchQuery}) {
         ) : (
           userData.map((user) => (
             <UserListItem
-              key={user.id}
-              id = {user.id}
+              key={user._id}
+              id = {user._id}
               title={user.name}
               email={user.email}
               picture={user.image}
