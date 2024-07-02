@@ -1,35 +1,86 @@
-import { USER_LIST } from '../constants';
 import { CustomError } from '../lib/error/custom.error';
+import { User } from '../models/user.model';
+import bcrypt from 'bcrypt';
+import { addFiles, getFileURL } from './s3.service';
 
-export const getUsersService = async (q: string | undefined, page_number: number, limit: number) => {
+export const getUsersService = async (q: string = '', page_number: number, limit: number) => {
   const startIndex = (page_number - 1) * limit;
-  const endIndex = startIndex + limit;
-  const filteredList = q
-    ? USER_LIST.filter((user) => user.name.toLowerCase().includes(q.toLowerCase()) || user.email.toLowerCase().includes(q.toLowerCase()))
-    : USER_LIST;
 
-  const total_count = filteredList.length;
-  const user_data_list = filteredList.slice(startIndex, endIndex);
+  let filter = {};
+  if (q) {
+    const regex = new RegExp(q, 'i');
+    filter = {
+      $or: [{ name: { $regex: regex } }, { email: { $regex: regex } }],
+    };
+  }
+
+  const total_count = await User.countDocuments(filter);
+  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ created_at: -1 }).skip(startIndex).limit(limit);
+
+  const user_data_list = await Promise.all(
+    fetched_user_list.map(async (user) => {
+      const imageURL = user.image ? await getProfilePicture(user.image) : null;
+      return {
+        ...user.toObject(),
+        image: imageURL,
+      };
+    }),
+  );
 
   return { total_count, user_data_list };
 };
 
-export const addUserService = async (name: string, email: string, image: string) => {
-  const newUser = {
-    id: USER_LIST.length + 1,
-    name,
-    email,
-    image,
+export const getUserService = async (id: string) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid ID.');
+
+  await User.findByIdAndUpdate(id, { deleted_at: null });
+
+  const result = await User.findOne({ _id: id, deleted_at: null }, { name: 1, email: 1, _id: 1, image: 1 }).lean();
+  if (!result) throw new CustomError(404, 'Not Found', 'User not found.');
+
+  const imageURL = await getProfilePicture(result.image);
+
+  const user_data = {
+    id: result._id,
+    name: result.name,
+    email: result.email,
+    image: imageURL,
   };
 
-  USER_LIST.push(newUser);
-
-  return newUser;
+  return user_data;
 };
-export const deleteUserService = async (id: number) => {
-  const index = USER_LIST.findIndex((user) => user.id === id);
 
-  if (index === -1) throw new CustomError(404, 'User Not Found', 'User with id: ${id} does not exist in the database');
+export const addUserService = async (name: string, email: string, password: string, file: any) => {
+  if (!file) throw new CustomError(400, 'Invalid Payload', 'Image is required');
 
-  USER_LIST.splice(index, 1);
+  const values = {
+    name,
+    email,
+    password: bcrypt.hashSync(password, 10),
+    image: '',
+  };
+
+  const newUser = await User.create(values);
+  const file_name = 'images/profile_' + newUser.id;
+
+  await addFiles(file_name, file.mimetype, file.buffer);
+  await User.findByIdAndUpdate(newUser.id, { image: file_name });
+};
+
+const getProfilePicture = async (image_key: string | null | undefined = '') => {
+  if (!image_key) return '';
+
+  return getFileURL(image_key);
+};
+
+import mongoose from 'mongoose';
+
+export const deleteUserService = async (id: string) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid ID.');
+
+  const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { deleted_at: new Date() }, { new: true });
+
+  if (!result) {
+    throw new CustomError(404, 'Not Found', 'Document does not exist.');
+  }
 };

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const getUserListSchema = z.object({
   q: z.string().optional(),
-  page_number: z
+  page: z
     .string()
     .optional()
     .default('1')
@@ -19,9 +19,9 @@ export const getUserListSchema = z.object({
 export const addUserSchema = z.object({
   name: z.string().min(3).max(50),
   email: z.string().email().min(5).max(50),
-  image: z.string(),
+  password: z.string().min(5).max(50),
 });
 
 export const deleteUserSchema = z.object({
-  id: z.string().transform((val) => parseInt(val, 10)),
+  id: z.string(),
 });

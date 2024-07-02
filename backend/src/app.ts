@@ -4,11 +4,15 @@ import helmetSecurity from 'helmet';
 import corsMiddleware from 'cors';
 import cookieParserMiddleware from 'cookie-parser';
 import path from 'path';
+import mongoose from 'mongoose';
 
 import { handleError, handleNotFound } from './middlewares/middlewares';
+import { MONGODB_URI } from './constants';
 
-import dotenv from 'dotenv';
-dotenv.config();
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 const expressApp = express();
 expressApp.use(morganLogger('dev'));
@@ -27,6 +31,7 @@ expressApp.use('/images', express.static('public/images'));
 
 // Importing API routes
 import apiRoutes from './route';
+
 expressApp.use('/api', apiRoutes);
 
 // Custom Middleware
