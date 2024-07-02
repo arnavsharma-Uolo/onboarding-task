@@ -18,7 +18,7 @@ function UserList ({searchQuery}) {
     };
     
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/user?q=${searchQuery}&page_number=${currPage}&limit=8`, requestOptions);
+      const response = await fetch(`http://localhost:8000/api/v1/user?q=${searchQuery}&page=${currPage}&limit=8`, requestOptions);
       const result = await response.json();
       
       if(result.success === false)

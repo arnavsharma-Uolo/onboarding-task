@@ -1,26 +1,21 @@
 import React from 'react';
 import classes from  './App.module.css';
-import Header from './components/header/header';
-import Sidebar from './components/sidebar/sidebar';
 import ShowUser from './pages/showUsers/ShowUser';
 import AddUser from './pages/addUser/AddUser';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from './Layout';
+import LoginPage from './pages/loginPage/LoginPage';
 
 function App() {
 
   return (
     <div className={classes.App}>
       <BrowserRouter>
-        <Header/>
-        <div className={classes.AppContainer}>
-          <Sidebar/>
-          <div className={classes.AppContent}>
-            <Routes>
-              <Route path="/" element={<ShowUser />} />
-              <Route path="/create-profile" element={<AddUser />} />
-            </Routes>
-          </div>
-        </div>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<Layout Component={<ShowUser />} />} />
+          <Route path="/create-profile" element={<Layout Component={<AddUser />} />} />
+        </Routes>
       </BrowserRouter>
     </div>
   );

@@ -6,7 +6,6 @@ import { addUserService, deleteUserService, getUserService, getUsersService } fr
 
 // GET /api/v1/users
 export const getUsers = controllerWrapper(async (req, res) => {
-  console.log(req.query);
   const { q, page, limit } = getUserListSchema.parse(req.query);
 
   const { total_count, user_data_list } = await getUsersService(q, page, limit);

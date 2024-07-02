@@ -10,17 +10,32 @@ function AddUser() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [disabledMessage, setDisabledMessage] = useState("All fields are required");
+  const [apiError, setApiError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const isFormFilled = name && email && password && confirmPassword && image;
-    setDisabled(!isFormFilled || password !== confirmPassword);
-    setDisabledMessage(
-      !isFormFilled ? "All fields are required" : 
-      password !== confirmPassword ? "Passwords do not match" : ""
-    );
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    let message = '';
+    let isFormInvalid = false;
+
+    if (!(name && email && password && confirmPassword && image)) {
+      message = "All fields are required";
+    } else if (!emailRegex.test(email)) {
+      message = "Please enter a valid email address";
+    } else if (password !== confirmPassword) {
+      message = "Passwords do not match";
+    } else if (!passwordRegex.test(password)) {
+      message = "Password must be at least 8 characters long, contain at least one letter and one number";
+    }
+
+    isFormInvalid = !!message;
+    setDisabled(isFormInvalid);
+    setDisabledMessage(message);
+      
   }, [name, email, password, confirmPassword, image]);
 
   const handleSubmit = async (e) => {
@@ -42,7 +57,10 @@ function AddUser() {
       const result = await response.json();
       
       if(result.success === false)
-        throw new Error(response.message);
+        {
+          setApiError(result.error);
+          throw new Error(response.message);
+        }
 
       console.log(result);
       emptyFields();
@@ -58,6 +76,7 @@ function AddUser() {
     setPassword('');
     setConfirmPassword('');
     setImage(null);
+    setApiError('');
   };
 
   const closeModal = () => {
@@ -71,6 +90,7 @@ function AddUser() {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }
+    setImageURL(URL.createObjectURL(e.target.files[0]));
   };
 
   const triggerFileInputClick = () => {
@@ -96,7 +116,7 @@ function AddUser() {
                 accept="image/*"
                 style={{ display: 'none' }}
               />
-              { image ? <img src={URL.createObjectURL(image)} alt="Placeholder" className={classes.Image} /> : <Placeholder className={classes.Image} /> }
+              { image ? <img src={imageURL} alt="Placeholder" className={classes.Image} /> : <Placeholder className={classes.Image} /> }
               <DownloadButton className={classes.DownloadButton} />
             </div>
           </div>
@@ -149,10 +169,11 @@ function AddUser() {
             />
           </div>
           <span className={disabled ? classes.ActionMessageShow : classes.ActionMessageHide}>{disabledMessage}</span>
+          <span className={apiError !== '' ? classes.ActionMessageShow : classes.ActionMessageHide}>{apiError}</span>
         </div>
         <div className={classes.ActionContainer}>
-          <button type="button" className={`${classes.Button} ${classes.CancelButton}`}>Cancel</button>
-          <button type="submit" className={`${classes.Button} ${classes.SaveButton}`} disabled={disabled}  onClick={handleSubmit}>
+          <button type="button" className={`${classes.Button} ${classes.CancelButton}`} onClick={emptyFields} >Cancel</button>
+          <button type="submit" className={`${classes.Button} ${classes.SaveButton}`} disabled={disabled} onClick={handleSubmit}>
             Save
           </button>
         </div>
