@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import classes from './AddUser.module.css';
 import { ReactComponent as Placeholder } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButton } from '../../assets/download_button.svg';
+import Modal from '../../components/model/model';
 
 function AddUser() {
   const [name, setName] = useState('');
@@ -11,6 +12,7 @@ function AddUser() {
   const [image, setImage] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [disabledMessage, setDisabledMessage] = useState("All fields are required");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const isFormFilled = name && email && password && confirmPassword && image;
@@ -43,9 +45,24 @@ function AddUser() {
         throw new Error(response.message);
 
       console.log(result);
+      emptyFields();
+      setIsModalOpen(true);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const emptyFields = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setImage(null);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    window.location.href = '/';
   };
 
   const fileInputRef = useRef(null);
@@ -62,6 +79,7 @@ function AddUser() {
 
   return (
     <div className={classes.AddUserContainer}>
+      <Modal isOpen={isModalOpen} icon={'done'} message="User added successfully!" onClose={closeModal} />
       <p className={classes.Heading}>Create Profile</p>
       <form className={classes.FormContainer} onSubmit={handleSubmit}>
         <div className={classes.FieldsContainer}>

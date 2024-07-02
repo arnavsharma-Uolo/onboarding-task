@@ -33,7 +33,7 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
         picture && !imageError ? (
           <img
             className={classes.UserListItemImage}
-            src={picture.startsWith("http") ? picture : `http://localhost:8000${picture}`}
+            src={picture}
             alt={email}
             onError={() => setImageError(true)}
             loading='lazy'
