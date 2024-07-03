@@ -26,9 +26,6 @@ expressApp.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
-// Serve static files
-expressApp.use('/images', express.static('public/images'));
-
 // Importing API routes
 import apiRoutes from './route';
 
