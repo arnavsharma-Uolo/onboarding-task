@@ -1,19 +1,28 @@
-import React from 'react';
-import classes from  './Layout.module.css';
+import styled from 'styled-components';
 import Header from './components/header/header';
 import Sidebar from './components/sidebar/sidebar';
 
-function Layout( {Component}) {
+// Define styled components
+const AppContainer = styled.div`
+  display: flex;
+  flex: 1;
+  background: #f3f3f3;
+`;
 
+const AppContent = styled.div`
+  flex: 1;
+`;
+
+function Layout({ Component }) {
   return (
     <>
-      <Header/>
-      <div className={classes.AppContainer}>
-        <Sidebar/>
-        <div className={classes.AppContent}>
+      <Header />
+      <AppContainer>
+        <Sidebar />
+        <AppContent>
           {Component}
-        </div>
-      </div>
+        </AppContent>
+      </AppContainer>
     </>
   );
 }
