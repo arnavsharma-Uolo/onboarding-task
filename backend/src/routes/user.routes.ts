@@ -5,6 +5,7 @@ import { uploadSingle } from '../middlewares/multer.middleware';
 const userRouter = express.Router();
 
 userRouter.get('/', getUsers);
+
 userRouter.get('/:id', getUser);
 userRouter.post('/', uploadSingle, addUser);
 userRouter.delete('/:id', deleteUser);

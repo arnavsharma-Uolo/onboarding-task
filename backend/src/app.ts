@@ -1,6 +1,5 @@
 import express from 'express';
 import morganLogger from 'morgan';
-import helmetSecurity from 'helmet';
 import corsMiddleware from 'cors';
 import cookieParserMiddleware from 'cookie-parser';
 import path from 'path';
@@ -16,7 +15,6 @@ mongoose
 
 const expressApp = express();
 expressApp.use(morganLogger('dev'));
-expressApp.use(helmetSecurity());
 expressApp.use(corsMiddleware());
 expressApp.use(express.json());
 expressApp.use(cookieParserMiddleware());

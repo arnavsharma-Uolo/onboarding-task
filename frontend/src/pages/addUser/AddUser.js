@@ -205,7 +205,6 @@ function AddUser() {
     const requestOptions = {
       method: "POST",
       body: formData,
-      redirect: "follow"
     };
     
     try {

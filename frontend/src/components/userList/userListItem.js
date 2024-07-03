@@ -86,8 +86,7 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
       method: "DELETE",
       headers: {
         'Content-Type': 'application/json'
-      },
-      redirect: "follow"
+      }
     };
 
     try {

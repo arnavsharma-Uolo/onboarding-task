@@ -22,6 +22,6 @@ export const addUserSchema = z.object({
   password: z.string().min(5).max(50),
 });
 
-export const deleteUserSchema = z.object({
+export const userIDSchema = z.object({
   id: z.string(),
 });

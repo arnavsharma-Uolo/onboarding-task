@@ -1,10 +1,10 @@
 import { controllerWrapper } from '../lib/controllerWrapper';
 import { CustomError } from '../lib/error/custom.error';
 import build_response from '../lib/response/MessageResponse';
-import { addUserSchema, deleteUserSchema, getUserListSchema } from '../lib/zod/user.schema';
+import { addUserSchema, userIDSchema, getUserListSchema } from '../lib/zod/user.schema';
 import { addUserService, deleteUserService, getUserService, getUsersService } from '../services/user.service';
 
-// GET /api/v1/users
+// GET /api/v1/user
 export const getUsers = controllerWrapper(async (req, res) => {
   const { q, page, limit } = getUserListSchema.parse(req.query);
 
@@ -15,7 +15,7 @@ export const getUsers = controllerWrapper(async (req, res) => {
 
 // GET /api/v1/user/:id
 export const getUser = controllerWrapper(async (req, res) => {
-  const { id } = deleteUserSchema.parse(req.params);
+  const { id } = userIDSchema.parse(req.params);
 
   const user = await getUserService(id);
 
@@ -34,7 +34,7 @@ export const addUser = controllerWrapper(async (req, res) => {
 
 // DELETE /api/v1/user/:id
 export const deleteUser = controllerWrapper(async (req, res) => {
-  const { id } = deleteUserSchema.parse(req.params);
+  const { id } = userIDSchema.parse(req.params);
 
   await deleteUserService(id);
 

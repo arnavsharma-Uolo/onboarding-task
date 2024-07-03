@@ -34,8 +34,7 @@ function UserList ({searchQuery}) {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
-      },
-      redirect: "follow"
+      }
     };
     
     try {

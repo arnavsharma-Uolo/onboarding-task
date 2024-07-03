@@ -14,7 +14,7 @@ export const getUsersService = async (q: string = '', page_number: number, limit
   }
 
   const total_count = await User.countDocuments(filter);
-  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ created_at: -1 }).skip(startIndex).limit(limit);
+  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ createdAt: -1 }).skip(startIndex).limit(limit);
 
   const user_data_list = await Promise.all(
     fetched_user_list.map(async (user) => {
