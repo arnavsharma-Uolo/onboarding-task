@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import UserList from '../../components/userList/userList';
+import { useState } from 'react';
+import UserList from '../../components/userList/UserList';
 import classes from './ShowUser.module.css';
 import useDebounce from '../../lib/debounce';
 import { ReactComponent as SearchIcon } from '../../assets/search_icon.svg';

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import Header from './components/header/header';
-import Sidebar from './components/sidebar/sidebar';
+import Header from './components/header/Header';
+import Sidebar from './components/sidebar/Sidebar';
 
 // Define styled components
 const AppContainer = styled.div`

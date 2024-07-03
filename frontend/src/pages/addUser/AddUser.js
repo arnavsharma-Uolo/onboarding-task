@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import classes from './AddUser.module.css';
 import { ReactComponent as Placeholder } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButton } from '../../assets/download_button.svg';
-import Modal from '../../components/model/model';
+import ModalComponent from '../../components/modal/Modal';
 
 function AddUser() {
   const [name, setName] = useState('');
@@ -17,7 +17,7 @@ function AddUser() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     let message = '';
     let isFormInvalid = false;
@@ -99,7 +99,7 @@ function AddUser() {
 
   return (
     <div className={classes.AddUserContainer}>
-      <Modal isOpen={isModalOpen} icon={'done'} message="User added successfully!" onClose={closeModal} />
+      <ModalComponent isOpen={isModalOpen} icon={'done'} message="User added successfully!" onClose={closeModal} />
       <p className={classes.Heading}>Create Profile</p>
       <form className={classes.FormContainer} onSubmit={handleSubmit}>
         <div className={classes.FieldsContainer}>

@@ -1,4 +1,37 @@
-import classes from './Pagination.module.css';
+import styled from 'styled-components';
+
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+  padding: 20px;
+`;
+
+const PaginationButton = styled.button`
+  padding: 10px;
+  width: 38px;
+  border: 1px solid #E2E2E2;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #000000;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #581fe753;
+    cursor: pointer;
+  }
+`;
+
+const PaginationButtonActive = styled(PaginationButton)`
+  background: #561FE7;
+  color: #ffffff;
+
+  &:hover {
+    background: #561FE7;
+  }
+`;
 
 function Pagination({ currPage, setCurrPage, totalPages }) {
   let startPage = Math.max(currPage - 2, 1);
@@ -21,47 +54,43 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
 
   return (
     totalPages > 0 ? 
-    <div className={classes.Pagination}>
-      <button 
-        className={classes.PaginationButton} 
+    <PaginationContainer>
+      <PaginationButton 
         onClick={() => setCurrPage(1)}
         disabled={currPage === 1}
       >
         {'<<'}
-      </button>
+      </PaginationButton>
       {startPage > 1 && (
-        <button
-          className={classes.PaginationButton}
+        <PaginationButton
           onClick={() => shiftPages('prev')}
         >
           {'...'}
-        </button>
+        </PaginationButton>
       )}
       {Array.from({ length: (endPage - startPage + 1) }, (_, i) => startPage + i).map(pageNumber => (
-        <button
+        <PaginationButton
           key={pageNumber}
-          className={pageNumber === currPage ? `${classes.PaginationButton} ${classes.PaginationButtonActive}` : classes.PaginationButton}
+          as={pageNumber === currPage ? PaginationButtonActive : undefined}
           onClick={() => setCurrPage(pageNumber)}
         >
           {pageNumber}
-        </button>
+        </PaginationButton>
       ))}
       {endPage < totalPages && (
-        <button
-          className={classes.PaginationButton}
+        <PaginationButton
           onClick={() => shiftPages('next')}
         >
           {'...'}
-        </button>
+        </PaginationButton>
       )}
-      <button 
-        className={classes.PaginationButton} 
+      <PaginationButton 
         onClick={() => setCurrPage(totalPages)}
         disabled={currPage === totalPages}
       >
         {'>>'}
-      </button>
-    </div> : <div className={classes.Pagination}></div>
+      </PaginationButton>
+    </PaginationContainer> : <PaginationContainer></PaginationContainer>
   );
 }
 

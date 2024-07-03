@@ -1,17 +1,35 @@
-import classes from  './header.module.css';
+import styled from 'styled-components';
+import Profile from '../profile/Profile';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
-import Profile from '../profile/profile';
 import { Link } from 'react-router-dom';
 
-function Header () {
+const StyledHeader = styled.header`
+  z-index: 3;
+  box-shadow: 0px 4px 4px 0px #0000000D;
+  padding-left: 30px;
+  padding-right: 30px;
+`;
+
+const HeaderContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+`;
+
+const HeaderHamburger = styled.div`
+  display: none;
+`;
+
+function Header() {
   return (
-    <header className={classes.Header}>
-      <div className={classes.HeaderContent}>
-        <div className={classes.HeaderHamburger}>|||</div>
-        <Link to="/" className={classes.LogoLink}><Logo /></Link>
+    <StyledHeader>
+      <HeaderContent>
+        <HeaderHamburger>|||</HeaderHamburger>
+        <Link to="/"><Logo /></Link>
         <Profile />
-      </div>
-    </header>
+      </HeaderContent>
+    </StyledHeader>
   );
 }
 
