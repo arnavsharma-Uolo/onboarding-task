@@ -1,17 +1,16 @@
+import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
+import resizeImage from './sharp.service';
+import { addFiles, getFileURL } from './s3.service';
 import { CustomError } from '../lib/error/custom.error';
 import { User } from '../models/user.model';
-import bcrypt from 'bcrypt';
-import { addFiles, getFileURL } from './s3.service';
 
 export const getUsersService = async (q: string = '', page_number: number, limit: number) => {
   const startIndex = (page_number - 1) * limit;
-  let filter: any = { deleted_at: null };
+  const filter: any = { deleted_at: null };
   if (q) {
     const regex = new RegExp(q, 'i');
-    filter.$or = [
-      { name: { $regex: regex } },
-      { email: { $regex: regex } }
-    ];
+    filter.$or = [{ name: { $regex: regex } }, { email: { $regex: regex } }];
   }
 
   const total_count = await User.countDocuments(filter);
@@ -63,17 +62,10 @@ export const addUserService = async (name: string, email: string, password: stri
   const newUser = await User.create(values);
   const file_name = 'images/profile_' + newUser.id;
 
-  await addFiles(file_name, file.mimetype, file.buffer);
+  const profile_image = await resizeImage(file.buffer, 500, 500);
+  await addFiles(file_name, file.mimetype, profile_image);
   await User.findByIdAndUpdate(newUser.id, { image: file_name });
 };
-
-const getProfilePicture = async (image_key: string | null | undefined = '') => {
-  if (!image_key) return '';
-
-  return getFileURL(image_key);
-};
-
-import mongoose from 'mongoose';
 
 export const deleteUserService = async (id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid ID.');
@@ -83,4 +75,10 @@ export const deleteUserService = async (id: string) => {
   if (!result) {
     throw new CustomError(404, 'Not Found', 'Document does not exist.');
   }
+};
+
+const getProfilePicture = async (image_key: string | null | undefined = '') => {
+  if (!image_key) return '';
+
+  return getFileURL(image_key);
 };
