@@ -1,33 +1,34 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const UserListItemContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto;
-  margin-top: 10px;
   background: #F6F6F6;
   border-radius: 16px;
+  opacity: ${props => props.opacity || 1};
+`;
+
+const UserListItemImageError = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2em;
+  font-weight: 400;
+  border-radius: 16px 16px 0 0;
 `;
 
 const UserListItemImage = styled.img`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 330px;
-  height: 322px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 27.72px;
+  width: 100%;
   object-fit: cover;
   border-radius: 16px 16px 0 0;
-
-  @media screen and (max-width: 768px) {
-    width: 180px;
-  }
 `;
 
 const UserListItemContent = styled.div`
@@ -35,22 +36,20 @@ const UserListItemContent = styled.div`
   flex-direction: column;
   align-items: center;
   flex-wrap: nowrap;
-  width: 288px;
-  padding: 20px;
+  padding: 20px 0px;
   border: 1px solid #E2E2E2;
   border-radius: 0 0 16px 16px;
   font-family: 'Outfit', sans-serif;
   font-size: 22px;
   font-weight: 400;
   line-height: 27.72px;
+  width: calc(100% - 2px);
 
   p {
     margin: 0;
   }
 
   @media screen and (max-width: 768px) {
-    width: 160px;
-    padding: 10px;
     font-size: 14px;
   }
 `;
@@ -75,13 +74,16 @@ const DeleteButton = styled.button`
 
   &:hover {
     color: #FF0000;
+    opacity: 1;
   }
 `;
 
 function UserListItem({ id, title, email, picture, onDeleted }) {
   const [imageError, setImageError] = useState(false);
+  const [opacity, setOpacity] = useState(1);
 
   const handleDelete = async (id) => {
+    setOpacity(0.5);
     const requestOptions = {
       method: "DELETE",
       headers: {
@@ -94,16 +96,18 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
       const result = await response.json();
 
       if(result.success === false)
-        throw new Error(response.message);
-
-      onDeleted();
-    } catch (error) {
-      console.error(error);
+        throw new Error(result.message);
+        
+        onDeleted();
+      } catch (error) {
+        setOpacity(1);
+        toast.error(error.message);
+        console.log(error);
     }
   }
 
   return (
-    <UserListItemContainer>
+    <UserListItemContainer opacity={ opacity }>
       <DeleteButton onClick={() => handleDelete(id)}>X</DeleteButton>
       {
         picture && !imageError ? (
@@ -114,7 +118,7 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
             loading='lazy'
           />
         ) : (
-          <UserListItemImage>No Image Found</UserListItemImage>
+          <UserListItemImageError>No Image Found</UserListItemImageError>
         )
       }
       <UserListItemContent>

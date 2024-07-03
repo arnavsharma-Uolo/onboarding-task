@@ -7,6 +7,7 @@ import { ReactComponent as SearchIconSVG } from '../../assets/search_icon.svg';
 const ShowUserContainer = styled.div`
   background: #ffffff;
   padding: 25px;
+  height: -webkit-fill-available;
 `;
 
 const Heading = styled.p`
@@ -17,15 +18,26 @@ const Heading = styled.p`
   letter-spacing: 0.25px;
   line-height: 40.32px;
   text-align: center;
+  margin: 0.5em 0em 1em 0em;
 `;
 
 const SearchInputContainer = styled.div`
-  align-items: center;
+  align-items: stretch;
   display: flex;
   justify-content: center;
   margin: auto;
   position: relative;
   width: 100%;
+  margin-bottom: 20px;
+`;
+
+const SearchIcon = styled(SearchIconSVG)`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2em;
+  left: 1em;
+  width: 20px;
 `;
 
 const SearchInput = styled.input`
@@ -34,21 +46,11 @@ const SearchInput = styled.input`
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   font-weight: 400;
-  height: 38px;
   line-height: 24px;
-  padding: 10px;
-  padding-left: 50px;
+  padding: 1em 2em 1em 3em;
   text-align: left;
-  width: 70%;
-`;
-
-const SearchIcon = styled(SearchIconSVG)`
-  height: 20px;
-  left: 4em;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
+  color: #98A2B3;
+  width: calc(100% - 10em);
 `;
 
 const SearchButton = styled.button`
@@ -59,11 +61,11 @@ const SearchButton = styled.button`
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   font-weight: 600;
-  height: 62px;
   line-height: 21.79px;
   text-align: center;
   transition: all 0.3s ease;
-  width: 20%;
+  width: 10em;
+  align-self: stretch;
 
   &:hover {
     background: #D0D5DD;

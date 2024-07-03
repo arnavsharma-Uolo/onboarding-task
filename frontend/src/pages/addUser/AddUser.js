@@ -3,6 +3,7 @@ import ModalComponent from '../../components/modal/Modal';
 import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButtonIcon } from '../../assets/download_button.svg';
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const AddUserContainer = styled.div`
   display: flex;
@@ -214,13 +215,14 @@ function AddUser() {
       if(result.success === false)
         {
           setApiError(result.error);
-          throw new Error(response.message);
+          throw new Error(result.message);
         }
 
       console.log(result);
       emptyFields();
       setIsModalOpen(true);
     } catch (error) {
+      toast.error(error.message);
       console.error(error);
     }
   };

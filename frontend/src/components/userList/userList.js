@@ -1,48 +1,64 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Pagination from '../pagination/Pagination';
 import UserListItem from './UserListItem';
 import { useCallback, useEffect, useState } from 'react';
-
+import { toast } from 'react-toastify';
 
 const UserListContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 20px;
-  min-height: 70vh;
-  padding-top: 20px;
 `;
 
 const EmptyContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: auto;
   text-align: center;
   font-family: 'Outfit', sans-serif;
-  font-size: 35px;
+  font-size: 2.5em;
   font-weight: 400;
-  line-height: 27.72px;
+  height: 20em;
+  width: 100%;
 `;
 
-function UserList ({searchQuery}) {
+const loadingAnimation = keyframes`
+  100% {background-size:120% 100%}
+`;
+
+const LoaderContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 8em;
+  height: 1em;
+  -webkit-mask: radial-gradient(circle closest-side,#000 94%,#0000) left/20% 100%;
+  background: linear-gradient(#000 0 0) left/0% 100% no-repeat #ddd;
+  animation: ${loadingAnimation} 2s infinite steps(6);
+`;
+
+function UserList({ searchQuery }) {
   const [userData, setUserData] = useState([]);
   const [currPage, setCurrPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
+    setIsLoading(true);
     const requestOptions = {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
       }
     };
-    
+
     try {
       const response = await fetch(`http://localhost:8000/api/v1/user?q=${searchQuery}&page=${currPage}&limit=8`, requestOptions);
       const result = await response.json();
-      
+
       if(result.success === false)
-        throw new Error(response.message);
+        throw new Error(result.message);
 
       setUserData(result.data);
 
@@ -52,7 +68,9 @@ function UserList ({searchQuery}) {
       if(currPage > pageCount)
         setCurrPage(1);
     } catch (error) {
-      console.error(error);
+      toast.error(error.message)
+    } finally {
+      setIsLoading(false);
     }
   }, [searchQuery, currPage]);
 
@@ -63,32 +81,36 @@ function UserList ({searchQuery}) {
   const refreshData = () => {
     fetchData();
   };
-  
+
   return (
-    <>
-      <UserListContainer>
-        {userData.length === 0 ? (
-          <EmptyContainer>
-            No users found.
-            </EmptyContainer>
-        ) : (
-          userData.map((user) => (
+  <>
+    {isLoading ? (
+      <EmptyContainer>
+        <LoaderContent />
+      </EmptyContainer>
+    ) : userData.length === 0 ? (
+      <EmptyContainer>
+        No users found.
+      </EmptyContainer>
+    ) : (
+      <>
+        <UserListContainer>
+          {userData.map((user) => (
             <UserListItem
               key={user._id}
-              id = {user._id}
+              id={user._id}
               title={user.name}
               email={user.email}
               picture={user.image}
               onDeleted={refreshData}
             />
-          ))
-        )}
-      </UserListContainer>
-      <>
+          ))}
+        </UserListContainer>
         <Pagination currPage={currPage} setCurrPage={setCurrPage} totalPages={totalPages} />
       </>
-    </>
-  );
+    )}
+  </>
+);
 }
 
 export default UserList;

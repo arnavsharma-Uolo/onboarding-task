@@ -4,14 +4,18 @@ const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin: 20px;
-  padding: 20px;
+  gap: 0.5em;
+  margin-top: 1em;
+  padding: 1em 0px;
 `;
 
 const PaginationButton = styled.button`
-  padding: 10px;
-  width: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  width: 3em;
+  height: 3em;
   border: 1px solid #E2E2E2;
   border-radius: 8px;
   background: #FFFFFF;
@@ -56,10 +60,10 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
     totalPages > 0 ? 
     <PaginationContainer>
       <PaginationButton 
-        onClick={() => setCurrPage(1)}
+        onClick={() => setCurrPage(currPage - 1)}
         disabled={currPage === 1}
       >
-        {'<<'}
+        {'<'}
       </PaginationButton>
       {startPage > 1 && (
         <PaginationButton
@@ -85,10 +89,10 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
         </PaginationButton>
       )}
       <PaginationButton 
-        onClick={() => setCurrPage(totalPages)}
+        onClick={() => setCurrPage(currPage + 1)}
         disabled={currPage === totalPages}
       >
-        {'>>'}
+        {'>'}
       </PaginationButton>
     </PaginationContainer> : <PaginationContainer></PaginationContainer>
   );

@@ -6,15 +6,13 @@ import { Link } from 'react-router-dom';
 const StyledHeader = styled.header`
   z-index: 3;
   box-shadow: 0px 4px 4px 0px #0000000D;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 1em 2em;
 `;
 
 const HeaderContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
 `;
 
 const HeaderHamburger = styled.div`
