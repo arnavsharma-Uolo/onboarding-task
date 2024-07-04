@@ -7,42 +7,60 @@ import { ReactComponent as TeamMemberSelectedIcon } from '../../assets/team_memb
 import { useLocation } from 'react-router-dom';
 
 const SidebarContainer = styled.div`
-  display: none;
-  width: 20em;
-  min-width: 2em;
-  padding: 1em 0;
-  background: #ffffff;
-  box-shadow: 4px 0 4px 0 #0000000D;
-  z-index: 2;
-  font-weight: 600;
-  transition: all 0.3s ease;
+	display: none;
+	width: 20em;
+	min-width: 2em;
+	padding: 1em 0;
+	background: #ffffff;
+	box-shadow: 4px 0 4px 0 #0000000d;
+	z-index: 2;
+	font-weight: 600;
+	transition: all 0.3s ease;
 
-  @media screen and (min-width: 768px) {
-    display: block;
-  }
+	@media screen and (min-width: 768px) {
+		display: block;
+	}
 `;
 
 function Sidebar() {
-  const location = useLocation();
+	const location = useLocation();
 
-  const sidebar_items = [{
-    title: 'All Team Member',
-    icon: location.pathname === '/' ? <TeamMemberSelectedIcon /> : <TeamMemberIcon />,
-    link: '/',
-  },
-  {
-    title: 'Create Profile',
-    icon: location.pathname === '/create-profile' ? <AddTeamSelectedIcon /> : <AddTeamIcon />,
-    link: '/create-profile',
-  }];
+	const sidebar_items = [
+		{
+			title: 'All Team Member',
+			icon:
+				location.pathname === '/' ? (
+					<TeamMemberSelectedIcon />
+				) : (
+					<TeamMemberIcon />
+				),
+			link: '/',
+		},
+		{
+			title: 'Create Profile',
+			icon:
+				location.pathname === '/create-profile' ? (
+					<AddTeamSelectedIcon />
+				) : (
+					<AddTeamIcon />
+				),
+			link: '/create-profile',
+		},
+	];
 
-  return (
-    <SidebarContainer>
-      {sidebar_items.map((sidebarItem, index) => (
-        <SidebarItem key={index} link={sidebarItem.link} title={sidebarItem.title} icon={sidebarItem.icon} active={sidebarItem.active} />
-      ))}
-    </SidebarContainer>
-  );
+	return (
+		<SidebarContainer>
+			{sidebar_items.map((sidebarItem, index) => (
+				<SidebarItem
+					key={index}
+					link={sidebarItem.link}
+					title={sidebarItem.title}
+					icon={sidebarItem.icon}
+					active={sidebarItem.active}
+				/>
+			))}
+		</SidebarContainer>
+	);
 }
 
 export default Sidebar;
