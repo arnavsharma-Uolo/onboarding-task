@@ -34,12 +34,15 @@ const UserListItemImageError = styled.div`
 
 const UserListItemImage = styled.img`
 	width: 100%;
+	height: 100%;
+	min-height: 300px;
 	object-fit: cover;
 	border-radius: 16px 16px 0 0;
 `;
 
 const UserListItemContent = styled.div`
 	display: flex;
+	box-sizing: border-box;
 	flex-direction: column;
 	align-items: center;
 	flex-wrap: nowrap;
@@ -50,7 +53,7 @@ const UserListItemContent = styled.div`
 	font-size: 22px;
 	font-weight: 400;
 	line-height: 27.72px;
-	width: calc(100% - 2px);
+	width: 100%;
 
 	p {
 		margin: 0;
@@ -109,7 +112,7 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 			onDeleted();
 		} catch (error) {
 			setOpacity(1);
-			toast.error(error.message);
+			toast.error('Something went wrong. Please try again.');
 			console.log(error);
 		}
 	};

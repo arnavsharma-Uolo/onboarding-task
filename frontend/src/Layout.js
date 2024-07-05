@@ -11,6 +11,7 @@ const AppContainer = styled.div`
 
 const AppContent = styled.div`
 	flex: 1;
+	overflow-y: auto;
 `;
 
 function Layout({ Component }) {

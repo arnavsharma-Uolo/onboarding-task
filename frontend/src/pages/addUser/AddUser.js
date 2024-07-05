@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import ModalComponent from '../../components/modal/Modal';
 import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButtonIcon } from '../../assets/download_button.svg';
+import { ReactComponent as RemoveButtonIcon } from '../../assets/remove_button.svg';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -9,23 +10,24 @@ const AddUserContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	height: 100%;
+	box-sizing: border-box;
 	flex-direction: column;
 	margin: 2rem;
-	height: --webkit-fill-available;
 `;
 
 const FormContainer = styled.form`
 	display: flex;
 	text-align: left;
 	flex-direction: column;
-	width: 25rem;
+	width: 28rem;
 	background: #ffffff;
 	border: 1px solid #eaecf0;
 	border-radius: 16px;
 `;
 
 const FieldsContainer = styled.div`
-	padding: 1.2rem 1rem 0rem 1rem;
+	padding: 2rem 2rem 0rem 2rem;
 `;
 
 const ActionContainer = styled.div`
@@ -33,7 +35,7 @@ const ActionContainer = styled.div`
 	justify-content: right;
 	align-items: center;
 	gap: 1rem;
-	padding: 0.5rem;
+	padding: 1rem 2rem;
 	border-top: 1px solid #eaecf0;
 `;
 
@@ -43,7 +45,7 @@ const Button = styled.button`
 	font-weight: 600;
 	text-align: center;
 	cursor: pointer;
-	padding: 0.6rem 2.6rem;
+	padding: 0.6rem 2.1rem;
 	border-radius: 8px;
 	border: 1px;
 	background: transparent;
@@ -66,6 +68,7 @@ const Button = styled.button`
 `;
 
 const Heading = styled.p`
+	margin: 0rem 0rem 1rem 0rem;
 	font-family: 'Outfit', sans-serif;
 	font-size: 2rem;
 	font-weight: 700;
@@ -84,18 +87,7 @@ const Subtext = styled.span`
 `;
 const InputContainer = styled.div`
 	position: relative;
-	padding-bottom: 1rem;
-`;
-
-const ErrorMessage = styled.span`
-	font-family: 'Open Sans', sans-serif;
-	font-size: 0.7rem;
-	font-weight: 400;
-	text-align: right;
-	color: red;
-	position: absolute;
-	right: 0;
-	visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+	margin-bottom: 1rem;
 `;
 
 const InputText = styled.div`
@@ -111,6 +103,17 @@ const InputText = styled.div`
 	}
 `;
 
+const ErrorMessage = styled.span`
+	position: absolute;
+	right: 0;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 0.7rem;
+	font-weight: 400;
+	text-align: right;
+	color: red;
+	visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+`;
+
 const Input = styled.input`
 	box-sizing: border-box;
 	width: 100%;
@@ -124,15 +127,15 @@ const ImageContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 7rem;
-	height: 7rem;
+	width: 8rem;
+	height: 8rem;
 	border-radius: 50%;
 	margin: 1rem 0rem 1rem 0rem;
 `;
 
 const Image = styled.img`
-	width: 7em;
-	height: 7em;
+	width: 8em;
+	height: 8em;
 	border-radius: 50%;
 `;
 
@@ -140,8 +143,21 @@ const Placeholder = styled(PlaceholderIcon)``;
 
 const DownloadButton = styled(DownloadButtonIcon)`
 	padding: 5px;
-	width: 2rem;
-	height: 2rem;
+	width: 1.5rem;
+	height: 1.5rem;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #ffffff;
+	border: 2px solid #e2e2e2;
+	border-radius: 50%;
+	font-size: large;
+`;
+
+const RemoveButton = styled(RemoveButtonIcon)`
+	padding: 5px;
+	width: 1.5rem;
+	height: 1.5rem;
 	position: absolute;
 	bottom: 0;
 	right: 0;
@@ -208,12 +224,6 @@ function AddUser() {
 				[name]: value !== formData.password ? 'Passwords do not match' : '',
 			});
 		}
-		if (name === 'image') {
-			setFormDataError({
-				...formDataError,
-				[name]: !value ? 'Please select an image' : '',
-			});
-		}
 	};
 
 	const fileInputRef = useRef(null);
@@ -225,8 +235,13 @@ function AddUser() {
 				return;
 			}
 			setFormData({ ...formData, image: e.target.files[0] });
+			setImageURL(URL.createObjectURL(e.target.files[0]));
 		}
-		setImageURL(URL.createObjectURL(e.target.files[0]));
+	};
+
+	const handleImageRemove = () => {
+		setFormData({ ...formData, image: null });
+		setImageURL(null);
 	};
 
 	const triggerFileInputClick = () => {
@@ -239,21 +254,22 @@ function AddUser() {
 				!formData.email ||
 				!formData.password ||
 				!formData.confirmPassword ||
-				!formData.image,
+				!formData.image ||
+				!(formData.password === formData.confirmPassword),
 		);
 	}, [formData]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const formData = new FormData();
-		formData.append('name', formData.name);
-		formData.append('email', formData.email);
-		formData.append('password', formData.password);
-		formData.append('file', formData.image);
+		const data = new FormData();
+		data.append('name', formData.name);
+		data.append('email', formData.email);
+		data.append('password', formData.password);
+		data.append('file', formData.image);
 
 		const requestOptions = {
 			method: 'POST',
-			body: formData,
+			body: data,
 		};
 
 		try {
@@ -263,13 +279,16 @@ function AddUser() {
 			);
 			const result = await response.json();
 
-			if (result.success === false) throw new Error(result.message);
+			if (result.success === false) {
+				toast.error(result.error);
+				throw new Error(result.message);
+			}
 
 			console.log(result);
 			emptyFields();
 			setIsModalOpen(true);
 		} catch (error) {
-			toast.error(error.message);
+			toast.error('Something went wrong. Please try again.');
 			console.error(error);
 		}
 	};
@@ -309,11 +328,14 @@ function AddUser() {
 			<FormContainer onSubmit={handleSubmit}>
 				<FieldsContainer>
 					<InputContainer>
-						<InputText>
+						{!imageURL && (
+							<ErrorMessage show={true}>Please select an image</ErrorMessage>
+						)}
+						<InputText style={{ marginBottom: '0' }}>
 							Upload Photo<span>*</span>
 						</InputText>
 						<Subtext>Upload passport size photo</Subtext>
-						<ImageContainer onClick={triggerFileInputClick}>
+						<ImageContainer>
 							<input
 								type='file'
 								ref={fileInputRef}
@@ -322,21 +344,26 @@ function AddUser() {
 								style={{ display: 'none' }}
 							/>
 							{formData.image && imageURL ? (
-								<Image src={imageURL} alt='Uploaded' />
+								<Image
+									src={imageURL}
+									alt='Uploaded'
+									onClick={triggerFileInputClick}
+								/>
 							) : (
-								<Placeholder />
+								<Placeholder onClick={triggerFileInputClick} />
 							)}
-							<DownloadButton />
-							<ErrorMessage show={formDataError.image}>
-								{formDataError.image}
-							</ErrorMessage>
+
+							{!formData.image && !imageURL ? (
+								<DownloadButton />
+							) : (
+								<RemoveButton onClick={() => handleImageRemove()} />
+							)}
 						</ImageContainer>
 					</InputContainer>
 					<InputContainer>
 						<InputText>
 							Name
 							<span>
-								{' '}
 								*
 								<ErrorMessage show={formDataError.name}>
 									{formDataError.name}
@@ -353,9 +380,8 @@ function AddUser() {
 					</InputContainer>
 					<InputContainer>
 						<InputText>
-							Email
+							Email-ID
 							<span>
-								{' '}
 								*
 								<ErrorMessage show={formDataError.email}>
 									{formDataError.email}
@@ -374,7 +400,6 @@ function AddUser() {
 						<InputText>
 							Password
 							<span>
-								{' '}
 								*
 								<ErrorMessage show={formDataError.password}>
 									{formDataError.password}
@@ -393,7 +418,6 @@ function AddUser() {
 						<InputText>
 							Confirm Password
 							<span>
-								{' '}
 								*
 								<ErrorMessage show={formDataError.confirmPassword}>
 									{formDataError.confirmPassword}

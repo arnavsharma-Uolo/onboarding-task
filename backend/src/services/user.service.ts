@@ -14,7 +14,7 @@ export const getUsersService = async (q: string = '', page_number: number, limit
   }
 
   const total_count = await User.countDocuments(filter);
-  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ createdAt: -1 }).skip(startIndex).limit(limit);
+  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ updatedAt: -1 }).skip(startIndex).limit(limit);
 
   const user_data_list = await Promise.all(
     fetched_user_list.map(async (user) => {
@@ -52,19 +52,36 @@ export const getUserService = async (id: string) => {
 export const addUserService = async (name: string, email: string, password: string, file: any) => {
   if (!file) throw new CustomError(400, 'Invalid Payload', 'Image is required');
 
+  const userExist = await User.findOne({ email });
+
+  if (userExist && userExist.deleted_at === null) {
+    throw new CustomError(400, 'Invalid Payload', 'User with this email already exists');
+  }
+
   const values = {
     name,
     email,
     password: bcrypt.hashSync(password, 10),
     image: '',
+    deleted_at: null,
   };
 
-  const newUser = await User.create(values);
-  const file_name = 'images/profile_' + newUser.id;
+  const newUser = userExist
+    ? await User.findOneAndUpdate({ email }, values, { new: true })
+    : await User.create(values);
 
+  const file_name = `images/profile_${newUser?.id}`;
   const profile_image = await resizeImage(file.buffer, 500, 500);
   await addFiles(file_name, file.mimetype, profile_image);
-  await User.findByIdAndUpdate(newUser.id, { image: file_name });
+  await User.findByIdAndUpdate(newUser?.id, { image: file_name });
+
+  const user = {
+    id: newUser?._id,
+    name: newUser?.name,
+    email: newUser?.email,
+  };
+
+  return user;
 };
 
 export const deleteUserService = async (id: string) => {

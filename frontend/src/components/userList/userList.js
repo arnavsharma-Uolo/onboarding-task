@@ -23,20 +23,19 @@ const EmptyContainer = styled.div`
 `;
 
 const loadingAnimation = keyframes`
-  100% {background-size:120% 100%}
+  to{transform: rotate(1turn)}
 `;
 
 const LoaderContent = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: auto;
-	width: rem;
-	height: 1rem;
-	-webkit-mask: radial-gradient(circle closest-side, #000 94%, #0000) left/20%
-		100%;
+	width: 50px;
+	padding: 8px;
+	aspect-ratio: 1;
+	border-radius: 50%;
+	--_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+	mask: var(--_m);
+	mask-composite: subtract;
 	background: linear-gradient(#000 0 0) left/0% 100% no-repeat #ddd;
-	animation: ${loadingAnimation} 2s infinite steps(6);
+	animation: ${loadingAnimation} 1s infinite linear;
 `;
 
 function UserList({ searchQuery }) {
@@ -44,6 +43,7 @@ function UserList({ searchQuery }) {
 	const [currPage, setCurrPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLoading, setIsLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('No Users Found!');
 
 	const fetchData = useCallback(async () => {
 		setIsLoading(true);
@@ -70,7 +70,8 @@ function UserList({ searchQuery }) {
 
 			if (currPage > pageCount) setCurrPage(1);
 		} catch (error) {
-			toast.error(error.message);
+			setErrorMessage('Failed to fetch users...');
+			toast.error('Something went wrong. Please try again.');
 		} finally {
 			setIsLoading(false);
 		}
@@ -91,7 +92,7 @@ function UserList({ searchQuery }) {
 					<LoaderContent />
 				</EmptyContainer>
 			) : userData.length === 0 ? (
-				<EmptyContainer>No users found.</EmptyContainer>
+				<EmptyContainer>{errorMessage}</EmptyContainer>
 			) : (
 				<>
 					<UserListContainer>

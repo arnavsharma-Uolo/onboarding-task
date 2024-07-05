@@ -38,7 +38,7 @@ const ProfileText = styled.span`
 	}
 `;
 
-const Profilemodal = styled.div`
+const ProfileModal = styled.div`
 	position: absolute;
 	top: 90%;
 	right: 0;
@@ -75,14 +75,14 @@ function Profile() {
 		<ProfileContainer>
 			<ProfileContent onClick={toggleModal}>
 				<ProfileImage src={profilePic} alt='profile' />
-				<ProfileText>Arnav</ProfileText>
+				<ProfileText>Vikrant</ProfileText>
 				<DropDownIcon />
 			</ProfileContent>
 			{isModalOpen && (
-				<Profilemodal>
+				<ProfileModal>
 					<LogoutIcon />
 					<p>Logout</p>
-				</Profilemodal>
+				</ProfileModal>
 			)}
 		</ProfileContainer>
 	);
