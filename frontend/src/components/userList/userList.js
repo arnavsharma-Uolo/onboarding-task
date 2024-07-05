@@ -6,8 +6,8 @@ import { toast } from 'react-toastify';
 
 const UserListContainer = styled.div`
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-	gap: 20px;
+	grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+	gap: 2rem;
 `;
 
 const EmptyContainer = styled.div`
@@ -16,9 +16,9 @@ const EmptyContainer = styled.div`
 	justify-content: center;
 	text-align: center;
 	font-family: 'Outfit', sans-serif;
-	font-size: 2.5em;
+	font-size: 2.5rem;
 	font-weight: 400;
-	height: 20em;
+	height: 20rem;
 	width: 100%;
 `;
 
@@ -31,8 +31,8 @@ const LoaderContent = styled.div`
 	align-items: center;
 	justify-content: center;
 	margin: auto;
-	width: 8em;
-	height: 1em;
+	width: rem;
+	height: 1rem;
 	-webkit-mask: radial-gradient(circle closest-side, #000 94%, #0000) left/20%
 		100%;
 	background: linear-gradient(#000 0 0) left/0% 100% no-repeat #ddd;

@@ -6,9 +6,9 @@ const LinkWrapper = ({ isActive, ...props }) => <Link {...props} />;
 const SidebarItemContent = styled(LinkWrapper)`
 	display: flex;
 	align-items: center;
-	height: 3em;
-	padding: 0.5em 1em;
-	gap: 1em;
+	height: 3rem;
+	padding: 0.5rem 1rem;
+	gap: 1rem;
 	color: #667085;
 	background: ${(props) =>
 		props.isActive ? 'rgba(86, 31, 231, 0.2)' : 'none'};
@@ -26,7 +26,7 @@ const SidebarItemContent = styled(LinkWrapper)`
 
 const SidebarItemText = styled.div`
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1em;
+	font-size: 1rem;
 `;
 
 function SidebarItem({ link, icon, title }) {

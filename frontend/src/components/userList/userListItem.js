@@ -10,6 +10,13 @@ const UserListItemContainer = styled.div`
 	background: #f6f6f6;
 	border-radius: 16px;
 	opacity: ${(props) => props.opacity || 1};
+
+	&:hover {
+		button {
+			opacity: 1;
+		}
+	}
+
 `;
 
 const UserListItemImageError = styled.div`
@@ -74,7 +81,6 @@ const DeleteButton = styled.button`
 
 	&:hover {
 		color: #ff0000;
-		opacity: 1;
 	}
 `;
 

@@ -12,8 +12,8 @@ const ProfileContent = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	gap: 1em;
-	padding: 0.5em 1em;
+	gap: 1rem;
+	padding: 0.5rem 1rem;
 	cursor: pointer;
 	border-radius: 10px;
 	transition: all 0.3s ease;
@@ -24,13 +24,13 @@ const ProfileContent = styled.div`
 `;
 
 const ProfileImage = styled.img`
-	width: 3em;
-	height: 3em;
+	width: 3rem;
+	height: 3rem;
 `;
 
 const ProfileText = styled.span`
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1em;
+	font-size: 1rem;
 	font-weight: 600;
 
 	@media screen and (max-width: 768px) {
@@ -38,29 +38,29 @@ const ProfileText = styled.span`
 	}
 `;
 
-const ProfileModal = styled.div`
+const Profilemodal = styled.div`
 	position: absolute;
 	top: 90%;
 	right: 0;
 	display: flex;
 	align-items: center;
-	gap: 1em;
-	width: 15em;
-	padding: 1em;
+	gap: 1rem;
+	width: 15rem;
+	padding: 1rem;
 	background: #f6f6f6;
 	border: 1px solid #e2e2e2;
 	border-radius: 10px;
 	box-shadow: 0px 2px 4px 0px #0000000d;
 	z-index: 100;
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1em;
+	font-size: 1rem;
 	font-weight: 400;
 	p {
 		margin: 0;
 	}
 
 	@media screen and (max-width: 768px) {
-		width: 10em;
+		width: 10rem;
 	}
 `;
 
@@ -79,10 +79,10 @@ function Profile() {
 				<DropDownIcon />
 			</ProfileContent>
 			{isModalOpen && (
-				<ProfileModal>
+				<Profilemodal>
 					<LogoutIcon />
 					<p>Logout</p>
-				</ProfileModal>
+				</Profilemodal>
 			)}
 		</ProfileContainer>
 	);

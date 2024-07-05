@@ -8,9 +8,9 @@ import { useLocation } from 'react-router-dom';
 
 const SidebarContainer = styled.div`
 	display: none;
-	width: 20em;
-	min-width: 2em;
-	padding: 1em 0;
+	width: 20rem;
+	min-width: 2rem;
+	padding: 1rem 0;
 	background: #ffffff;
 	box-shadow: 4px 0 4px 0 #0000000d;
 	z-index: 2;

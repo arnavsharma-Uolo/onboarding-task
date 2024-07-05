@@ -17,18 +17,18 @@ const ModalOverlay = styled.div`
 const ModalContainer = styled.div`
 	position: relative;
 	background-color: #ffffff;
-	padding: 3em 8em;
-	margin: 10em;
+	padding: 3rem 8rem;
+	margin: 10rem;
 	border-radius: 16px;
 
 	p {
-		margin: 1em 0em 0em 0em;
+		margin: 1rem 0rem 0rem 0rem;
 	}
 `;
 
 const ModalIcon = styled.img`
-	width: 10em;
-	height: 10em;
+	width: 10rem;
+	height: 10rem;
 	margin: auto;
 	display: flex;
 	align-items: center;
@@ -40,16 +40,17 @@ const CloseButton = styled.button`
 	position: absolute;
 	top: 0;
 	right: 0;
-	margin: 1em;
+	margin: 1rem;
 	cursor: pointer;
 	background-color: white;
 	border: 0px;
 	font-size: large;
+	visibility: hidden;
 `;
 
 const ModalText = styled.p`
 	font-family: 'Outfit', sans-serif;
-	font-size: 2em;
+	font-size: 2rem;
 	font-weight: 500;
 	text-align: center;
 	color: #404040;

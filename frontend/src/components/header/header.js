@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const StyledHeader = styled.header`
 	z-index: 3;
 	box-shadow: 0px 4px 4px 0px #0000000d;
-	padding: 1em 2em;
+	padding: 1rem 2rem;
 `;
 
 const HeaderContent = styled.div`

@@ -4,18 +4,19 @@ const PaginationContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 0.5em;
-	margin-top: 1em;
-	padding: 1em 0px;
+	gap: 0.5rem;
+	margin-top: 1rem;
+	padding: 1rem 0px;
 `;
 
 const PaginationButton = styled.button`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 1em;
-	width: 3em;
-	height: 3em;
+	padding: 1rem;
+	width: 3rem;
+	height: 3rem;
+	font-size: 1rem;
 	border: 1px solid #e2e2e2;
 	border-radius: 8px;
 	background: #ffffff;

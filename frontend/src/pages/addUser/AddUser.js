@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import ModalComponent from '../../components/modal/Modal';
 import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButtonIcon } from '../../assets/download_button.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const AddUserContainer = styled.div`
@@ -10,7 +10,7 @@ const AddUserContainer = styled.div`
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	margin: 2em;
+	margin: 2rem;
 	height: --webkit-fill-available;
 `;
 
@@ -18,32 +18,32 @@ const FormContainer = styled.form`
 	display: flex;
 	text-align: left;
 	flex-direction: column;
-	width: 25em;
+	width: 25rem;
 	background: #ffffff;
 	border: 1px solid #eaecf0;
 	border-radius: 16px;
 `;
 
 const FieldsContainer = styled.div`
-	padding: 1.2em 1em 0em 1em;
+	padding: 1.2rem 1rem 0rem 1rem;
 `;
 
 const ActionContainer = styled.div`
 	display: flex;
 	justify-content: right;
 	align-items: center;
-	gap: 1em;
-	padding: 0.5em;
+	gap: 1rem;
+	padding: 0.5rem;
 	border-top: 1px solid #eaecf0;
 `;
 
 const Button = styled.button`
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1em;
+	font-size: 1rem;
 	font-weight: 600;
 	text-align: center;
 	cursor: pointer;
-	padding: 0.6em 2.6em;
+	padding: 0.6rem 2.6rem;
 	border-radius: 8px;
 	border: 1px;
 	background: transparent;
@@ -67,7 +67,7 @@ const Button = styled.button`
 
 const Heading = styled.p`
 	font-family: 'Outfit', sans-serif;
-	font-size: 2em;
+	font-size: 2rem;
 	font-weight: 700;
 	text-align: center;
 	color: #101828;
@@ -75,7 +75,7 @@ const Heading = styled.p`
 
 const Subtext = styled.span`
 	font-family: 'Open Sans', sans-serif;
-	font-size: 0.7em;
+	font-size: 0.7rem;
 	font-weight: 400;
 	line-height: 16.34px;
 	letter-spacing: 0.4000000059604645px;
@@ -84,12 +84,12 @@ const Subtext = styled.span`
 `;
 const InputContainer = styled.div`
 	position: relative;
-	padding-bottom: 1em;
+	padding-bottom: 1rem;
 `;
 
 const ErrorMessage = styled.span`
 	font-family: 'Open Sans', sans-serif;
-	font-size: 0.7em;
+	font-size: 0.7rem;
 	font-weight: 400;
 	text-align: right;
 	color: red;
@@ -99,6 +99,7 @@ const ErrorMessage = styled.span`
 `;
 
 const InputText = styled.div`
+	margin-bottom: 0.5rem;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 14px;
 	font-weight: 600;
@@ -115,7 +116,7 @@ const Input = styled.input`
 	width: 100%;
 	border: 1px solid #d0d5dd;
 	border-radius: 8px;
-	padding: 1em;
+	padding: 1rem;
 `;
 
 const ImageContainer = styled.div`
@@ -123,10 +124,10 @@ const ImageContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 7em;
-	height: 7em;
+	width: 7rem;
+	height: 7rem;
 	border-radius: 50%;
-	margin: 1em 0em 1em 0em;
+	margin: 1rem 0rem 1rem 0rem;
 `;
 
 const Image = styled.img`
@@ -139,8 +140,8 @@ const Placeholder = styled(PlaceholderIcon)``;
 
 const DownloadButton = styled(DownloadButtonIcon)`
 	padding: 5px;
-	width: 30px;
-	height: 30px;
+	width: 2rem;
+	height: 2rem;
 	position: absolute;
 	bottom: 0;
 	right: 0;
@@ -185,12 +186,14 @@ function AddUser() {
 						? `Name must be at least ${MIN_NAME_LENGTH} characters`
 						: '',
 			});
-		} else if (name === 'email') {
+		}
+		if (name === 'email') {
 			setFormDataError({
 				...formDataError,
 				[name]: !emailRegex.test(value) ? 'Invalid email' : '',
 			});
-		} else if (name === 'password') {
+		}
+		if (name === 'password') {
 			setFormDataError({
 				...formDataError,
 				[name]:
@@ -198,31 +201,29 @@ function AddUser() {
 						? `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
 						: '',
 			});
-		} else if (name === 'confirmPassword') {
+		}
+		if (name === 'confirmPassword') {
 			setFormDataError({
 				...formDataError,
 				[name]: value !== formData.password ? 'Passwords do not match' : '',
 			});
-		} else if (name === 'image') {
+		}
+		if (name === 'image') {
 			setFormDataError({
 				...formDataError,
 				[name]: !value ? 'Please select an image' : '',
 			});
 		}
-
-		setDisabled(
-			formDataError.name ||
-				formDataError.email ||
-				formDataError.password ||
-				formDataError.confirmPassword ||
-				formDataError.image,
-		);
 	};
 
 	const fileInputRef = useRef(null);
 
 	const handleImageChange = (e) => {
 		if (e.target.files[0]) {
+			if (e.target.files[0].size > 5242880) {
+				toast.error('File size should be less than 5 MB');
+				return;
+			}
 			setFormData({ ...formData, image: e.target.files[0] });
 		}
 		setImageURL(URL.createObjectURL(e.target.files[0]));
@@ -231,6 +232,16 @@ function AddUser() {
 	const triggerFileInputClick = () => {
 		fileInputRef.current.click();
 	};
+
+	useEffect(() => {
+		setDisabled(
+			!formData.name ||
+				!formData.email ||
+				!formData.password ||
+				!formData.confirmPassword ||
+				!formData.image,
+		);
+	}, [formData]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
