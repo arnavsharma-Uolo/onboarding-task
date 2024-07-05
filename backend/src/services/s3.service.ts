@@ -29,15 +29,6 @@ export const getFileURL = async (file_key: string) => {
 
   const command = new GetObjectCommand(params);
 
-  const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-  return url;
-};
-
-export const uploadAndGetURL = async (file_key: string, file_format: string, file: any) => {
-  console.log(1);
-  await addFiles(file_key, file_format, file);
-  console.log(2);
-  const url = await getFileURL(file_key);
-  console.log(3);
+  const url = await getSignedUrl(s3Client, command);
   return url;
 };

@@ -7,11 +7,21 @@ import mongoose from 'mongoose';
 
 import { handleError, handleNotFound } from './middlewares/middlewares';
 import { MONGODB_URI } from './constants';
+import { client as elastic_search_client } from './services/elasticsearch.service';
 
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
+
+elastic_search_client
+  .ping()
+  .then(() => {
+    console.log('Elasticsearch connected');
+  })
+  .catch((err: any) => {
+    console.log('Elasticsearch unavailable', { error: err });
+  });
 
 const expressApp = express();
 expressApp.use(morganLogger('dev'));
