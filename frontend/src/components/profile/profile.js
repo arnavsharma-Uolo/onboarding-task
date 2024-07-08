@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import profilePic from '../../assets/profilePic.svg';
 import { useState } from 'react';
 import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
-import { ReactComponent as DropDownIcon } from '../../assets/drop_down.svg';
+import { ReactComponent as DropDown } from '../../assets/drop_down.svg';
 
 const ProfileContainer = styled.div`
 	position: relative;
@@ -21,11 +21,18 @@ const ProfileContent = styled.div`
 	&:hover {
 		background: #f6f6f6;
 	}
+	@media screen and (max-width: 768px) {
+		padding: 0;
+	}
 `;
 
 const ProfileImage = styled.img`
 	width: 3rem;
 	height: 3rem;
+	@media screen and (max-width: 768px) {
+		width: 24px;
+		height: 24px;
+	}
 `;
 
 const ProfileText = styled.span`
@@ -38,6 +45,11 @@ const ProfileText = styled.span`
 	}
 `;
 
+const DropDownIcon = styled(DropDown)`
+	@media screen and (max-width: 768px) {
+		display: none;
+	}
+`;
 const ProfileModal = styled.div`
 	position: absolute;
 	top: 90%;

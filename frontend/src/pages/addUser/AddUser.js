@@ -16,6 +16,12 @@ const AddUserContainer = styled.div`
 	box-sizing: border-box;
 	flex-direction: column;
 	margin: 2rem;
+	@media screen and (max-width: 767px) {
+		margin: 0;
+		padding-top: 2rem;
+		justify-content: start;
+		background: #ffffff;
+	}
 `;
 
 const FormContainer = styled.form`
@@ -26,6 +32,14 @@ const FormContainer = styled.form`
 	background: #ffffff;
 	border: 1px solid #eaecf0;
 	border-radius: 16px;
+	@media screen and (max-width: 767px) {
+		width: 80%%;
+		border: 0;
+	}
+		@media screen and (max-width: 425px) {
+		width: 100%;
+		border: 0;
+	}
 `;
 
 const FieldsContainer = styled.div`

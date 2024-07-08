@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const LinkWrapper = ({ isActive, ...props }) => <Link {...props} />;
 
@@ -29,12 +29,13 @@ const SidebarItemText = styled.div`
 	font-size: 1rem;
 `;
 
-function SidebarItem({ link, icon, title }) {
-	const location = useLocation();
-	const isActive = location.pathname === link;
-
+function SidebarItem({ link, icon, title, active, setSidebarOpen }) {
 	return (
-		<SidebarItemContent to={link} isActive={isActive}>
+		<SidebarItemContent
+			to={link}
+			isActive={active}
+			onClick={() => setSidebarOpen(false)}
+		>
 			<div>{icon}</div>
 			<SidebarItemText>{title}</SidebarItemText>
 		</SidebarItemContent>

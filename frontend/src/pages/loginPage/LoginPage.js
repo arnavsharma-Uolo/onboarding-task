@@ -15,8 +15,10 @@ const LoginPageContainer = styled.div`
 const ImageContainer = styled.div`
 	.Image {
 		border-radius: 18px;
+		width:100%;
+		height:auto;
 	}
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 928px) {
 		display: none;
 	}
 `;
@@ -47,7 +49,7 @@ const FormContentText = styled.p`
 	font-size: 48px;
 	font-weight: 700;
 
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 768px) {
 		font-size: 32px;
 	}
 `;
@@ -59,7 +61,7 @@ const FormContentSubText = styled.p`
 	font-size: 0.9rem;
 	font-weight: 400;
 	color: #3f3f3f;
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 768px) {
 		font-size: 0.8rem;
 	}
 `;
@@ -97,7 +99,7 @@ const FormInput = styled.div`
 			outline: none;
 		}
 	}
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 768px) {
 		font-size: 0.8rem;
 	}
 `;
@@ -114,7 +116,7 @@ const FormButton = styled.button`
 	border-radius: 8px;
 	border: 0px;
 	background-color: #5b35da;
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 768px) {
 		font-size: 12px;
 	}
 `;

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Header from './components/header/Header';
 import Sidebar from './components/sidebar/Sidebar';
+import { useState } from 'react';
 
 // Define styled components
 const AppContainer = styled.div`
@@ -11,16 +12,18 @@ const AppContainer = styled.div`
 
 const AppContent = styled.div`
 	flex: 1;
+	position: ${(props) => (props.sidebarOpen ? 'fixed' : 'inherit')};
 	overflow-y: auto;
 `;
 
 function Layout({ Component }) {
+	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
 		<>
-			<Header />
+			<Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 			<AppContainer>
-				<Sidebar />
-				<AppContent>{Component}</AppContent>
+				<Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+				<AppContent sidebarOpen={sidebarOpen}>{Component}</AppContent>
 			</AppContainer>
 		</>
 	);
