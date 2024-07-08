@@ -6,7 +6,7 @@ import { CustomError } from '../lib/error/custom.error';
 import { User } from '../models/user.model';
 import { addDocument, searchDocument, updateDocument } from './elasticsearch/elasticsearch.service';
 import { decryptText } from '../lib/decryptText';
-import { PASSWORD_ENCRYPTION_KEY } from '../constants';
+import { ELASTICSEARCH_USER_INDEX, PASSWORD_ENCRYPTION_KEY } from '../constants';
 
 export const getUsersService = async (q: string = '', page_number: number, limit: number) => {
   const startIndex = (page_number - 1) * limit;
@@ -20,7 +20,7 @@ export const getUsersService = async (q: string = '', page_number: number, limit
     },
   };
 
-  const { total_count, document_list, error } = await searchDocument('test_user10', query, startIndex, limit);
+  const { total_count, document_list, error } = await searchDocument(ELASTICSEARCH_USER_INDEX, query, startIndex, limit);
 
   if (error) {
     const { db_total_count, db_user_list } = await getUsersServiceMongoDB(q, page_number, limit);
@@ -108,7 +108,7 @@ export const addUserService = async (name: string, email: string, password: stri
   await addFiles(file_name, file.mimetype, profile_image);
   await User.findByIdAndUpdate(newUser?.id, { image: file_name });
   await addDocument(
-    'test_user10',
+    ELASTICSEARCH_USER_INDEX,
     { id: newUser?._id, name: newUser?.name, email: newUser?.email, image: file_name, deleted_at: null },
     newUser?._id.toString(),
   );
@@ -131,7 +131,7 @@ export const updateUserService = async (id: string, name: string, email: string)
     throw new CustomError(404, 'Not Found', 'User not found.');
   }
 
-  await updateDocument('test_user10', id, { name, email });
+  await updateDocument(ELASTICSEARCH_USER_INDEX, id, { name, email });
 };
 
 export const deleteUserService = async (id: string) => {
@@ -143,7 +143,7 @@ export const deleteUserService = async (id: string) => {
     throw new CustomError(404, 'Not Found', 'Document does not exist.');
   }
 
-  await updateDocument('test_user10', id, { deleted_at: new Date() });
+  await updateDocument(ELASTICSEARCH_USER_INDEX, id, { deleted_at: new Date() });
 };
 
 const getProfilePicture = async (image_key: string | null | undefined = '') => {

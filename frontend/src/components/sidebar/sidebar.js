@@ -20,7 +20,7 @@ const SidebarContainer = styled.div`
 	font-weight: 600;
 	transition: all 0.3s ease;
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		display: ${(props) => (props.sidebarOpen ? 'block' : 'none')};
 		background: rgba(0, 0, 0, 0.5);
 		padding: 0;
@@ -34,7 +34,7 @@ const SidebarContainer = styled.div`
 `;
 
 const SidebarContent = styled.div`
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		width: 80%;
 		background: #ffffff;
 		height: 100%;
@@ -44,7 +44,7 @@ const SidebarContent = styled.div`
 const LogoIcon = styled(Logo)`
 	display: none;
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		display: inline-block;
 		padding: 3rem 0rem 4rem 0rem;
 	}
@@ -86,6 +86,19 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 			// Remove event listener on cleanup
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
+	}, [setSidebarOpen]);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth > 865) {
+				setSidebarOpen(false);
+			}
+		};
+
+		window.addEventListener('resize', handleResize);
+		handleResize();
+
+		return () => window.removeEventListener('resize', handleResize);
 	}, [setSidebarOpen]);
 
 	const sidebar_items = [

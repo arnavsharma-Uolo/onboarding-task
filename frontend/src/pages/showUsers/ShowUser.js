@@ -10,6 +10,9 @@ const ShowUserContainer = styled.div`
 	background: #ffffff;
 	padding: 25px;
 	height: -webkit-fill-available;
+	@media screen and (max-width: 768px) {
+		padding: 10px;
+	}
 `;
 
 const Heading = styled.p`
@@ -53,6 +56,13 @@ const SearchInput = styled.input`
 	text-align: left;
 	color: #98a2b3;
 	width: calc(100% - 10rem);
+	@media screen and (max-width: 500px) {
+		padding: 1rem 0rem 1rem 3rem;
+		width: 100%;
+	}
+	@media screen and (max-width: 390px) {
+		font-size: 15px;
+	}
 `;
 
 const SearchButton = styled.button`
@@ -72,6 +82,12 @@ const SearchButton = styled.button`
 	&:hover {
 		background: #d0d5dd;
 		cursor: pointer;
+	}
+	@media screen and (max-width: 500px) {
+		width: 7rem;
+	}
+	@media screen and (max-width: 390px) {
+		width: min-content;
 	}
 `;
 

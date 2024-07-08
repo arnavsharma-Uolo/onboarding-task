@@ -21,7 +21,7 @@ const ProfileContent = styled.div`
 	&:hover {
 		background: #f6f6f6;
 	}
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		padding: 0;
 	}
 `;
@@ -29,7 +29,7 @@ const ProfileContent = styled.div`
 const ProfileImage = styled.img`
 	width: 3rem;
 	height: 3rem;
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		width: 24px;
 		height: 24px;
 	}
@@ -40,13 +40,13 @@ const ProfileText = styled.span`
 	font-size: 1rem;
 	font-weight: 600;
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		display: none;
 	}
 `;
 
 const DropDownIcon = styled(DropDown)`
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		display: none;
 	}
 `;
@@ -71,7 +71,7 @@ const ProfileModal = styled.div`
 		margin: 0;
 	}
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		width: 10rem;
 	}
 `;

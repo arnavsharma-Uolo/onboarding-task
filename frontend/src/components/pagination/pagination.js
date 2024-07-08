@@ -27,6 +27,13 @@ const PaginationButton = styled.button`
 		background: #581fe753;
 		cursor: pointer;
 	}
+
+	@media screen and (max-width: 425px) {
+		width: 2rem;
+		height: 2rem;
+		font-size: 0.8rem;
+		padding: 0.8rem;
+	}
 `;
 
 const PaginationButtonActive = styled(PaginationButton)`
@@ -43,7 +50,7 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
 	let endPage = Math.min(currPage + 2, totalPages);
 
 	if (currPage - 2 < 1) {
-		endPage = Math.min(5, totalPages);
+		endPage = Math.min(4, totalPages);
 	}
 	if (currPage + 2 > totalPages) {
 		startPage = Math.max(totalPages - 4, 1);

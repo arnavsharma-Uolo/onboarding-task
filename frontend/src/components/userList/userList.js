@@ -16,8 +16,11 @@ const UserListContainer = styled.div`
 		grid-template-columns: 1fr 1fr;
 	}
 	@media screen and (max-width: 450px) {
-		grid-template-columns: 40vw 40vw;
-		grid-template-rows: 1vh 1v;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+	@media screen and (max-width: 415px) {
+		gap: 0.5rem;
 	}
 `;
 

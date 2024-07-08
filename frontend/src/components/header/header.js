@@ -8,7 +8,6 @@ const StyledHeader = styled.header`
 	z-index: 3;
 	box-shadow: 0px 4px 4px 0px #0000000d;
 	padding: 1rem 2rem;
-	position: ${(props) => (props.sidebarOpen ? 'fixed' : 'inherit')};
 `;
 
 const HeaderContent = styled.div`
@@ -20,7 +19,7 @@ const HeaderContent = styled.div`
 const HeaderHamburger = styled(HamburgerIcon)`
 	display: none;
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
 		display: block;
 	}
 `;

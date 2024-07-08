@@ -9,14 +9,13 @@ const UserListItemContainer = styled.div`
 	align-items: center;
 	background: #f6f6f6;
 	border-radius: 16px;
-	opacity: ${(props) => props.deleting ? 0.5 : 1};
+	opacity: ${(props) => (props.deleting ? 0.5 : 1)};
 
 	&:hover {
 		button {
 			opacity: 1;
 		}
 	}
-
 `;
 
 const UserListItemImageError = styled.div`
@@ -38,7 +37,6 @@ const UserListItemImage = styled.img`
 	object-fit: cover;
 	border-radius: 16px 16px 0 0;
 	@media screen and (max-width: 500px) {
-		
 	}
 `;
 
@@ -54,15 +52,24 @@ const UserListItemContent = styled.div`
 	font-family: 'Outfit', sans-serif;
 	font-size: 22px;
 	font-weight: 400;
-	line-height: 27.72px;
 	width: 100%;
 
 	p {
 		margin: 0;
 	}
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 870px) {
+		font-size: 20px;
+	}
+
+	@media screen and (max-width: 650px) {
+		padding: 15px 0px;
 		font-size: 14px;
+	}
+	@media screen and (max-width: 450px) {
+		font-size: 10px;
+		padding: 10px 0px;
+		word-break: break-all;
 	}
 `;
 
@@ -113,7 +120,7 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 			if (result.success === false) throw new Error(result.message);
 
 			setTimeout(() => {
-			  onDeleted();
+				onDeleted();
 			}, 2000);
 		} catch (error) {
 			setIsDeleting(false);
@@ -124,7 +131,9 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 
 	return (
 		<UserListItemContainer deleting={isDeleting}>
-			<DeleteButton onClick={() => handleDelete(id)} disabled={isDeleting}>X</DeleteButton>
+			<DeleteButton onClick={() => handleDelete(id)} disabled={isDeleting}>
+				X
+			</DeleteButton>
 			{picture && !imageError ? (
 				<UserListItemImage
 					src={picture}
