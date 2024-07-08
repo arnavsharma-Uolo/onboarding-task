@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 
 const SidebarContainer = styled.div`
 	display: none;
-	width: 20rem;
+	width: 18vw;
 	min-width: 2rem;
 	padding: 1rem 0;
 	background: #ffffff;

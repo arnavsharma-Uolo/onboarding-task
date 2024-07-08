@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import ModalComponent from '../../components/modal/Modal';
+import { encryptionKey } from '../../lib/constants';
+import { encryptText } from '../../lib/services/encryptText';
 import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButtonIcon } from '../../assets/download_button.svg';
 import { ReactComponent as RemoveButtonIcon } from '../../assets/remove_button.svg';
@@ -40,6 +42,7 @@ const ActionContainer = styled.div`
 `;
 
 const Button = styled.button`
+	width: 7rem;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 1rem;
 	font-weight: 600;
@@ -167,6 +170,26 @@ const RemoveButton = styled(RemoveButtonIcon)`
 	font-size: large;
 `;
 
+const Loader = styled.span`
+	width: 1rem;
+	height: 1rem;
+	border: 3px solid #fff;
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+
+	@keyframes rotation {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+`;
+
 function AddUser() {
 	const [formData, setFormData] = useState({
 		name: '',
@@ -184,6 +207,7 @@ function AddUser() {
 	});
 	const [imageURL, setImageURL] = useState(null);
 	const [disabled, setDisabled] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const updateFormData = (e) => {
@@ -261,18 +285,23 @@ function AddUser() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const data = new FormData();
-		data.append('name', formData.name);
-		data.append('email', formData.email);
-		data.append('password', formData.password);
-		data.append('file', formData.image);
-
-		const requestOptions = {
-			method: 'POST',
-			body: data,
-		};
+		setIsLoading(true);
 
 		try {
+			const data = new FormData();
+			data.append('name', formData.name);
+			data.append('email', formData.email);
+			data.append(
+				'password',
+				await encryptText(formData.password, encryptionKey),
+			);
+			data.append('file', formData.image);
+
+			const requestOptions = {
+				method: 'POST',
+				body: data,
+			};
+
 			const response = await fetch(
 				`http://localhost:8000/api/v1/user`,
 				requestOptions,
@@ -284,12 +313,13 @@ function AddUser() {
 				throw new Error(result.message);
 			}
 
-			console.log(result);
 			emptyFields();
 			setIsModalOpen(true);
 		} catch (error) {
 			toast.error('Something went wrong. Please try again.');
 			console.error(error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -440,10 +470,10 @@ function AddUser() {
 					<Button
 						type='submit'
 						className='SaveButton'
-						disabled={disabled}
+						disabled={disabled || isLoading}
 						onClick={handleSubmit}
 					>
-						Save
+						{isLoading ? <Loader /> : 'Save'}
 					</Button>
 				</ActionContainer>
 			</FormContainer>

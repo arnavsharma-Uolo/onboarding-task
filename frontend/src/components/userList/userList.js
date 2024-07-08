@@ -6,8 +6,19 @@ import { toast } from 'react-toastify';
 
 const UserListContainer = styled.div`
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+	grid-template-columns: 1fr 1fr 1fr 1fr;
 	gap: 2rem;
+
+	@media screen and (max-width: 1530px) {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+	@media screen and (max-width: 1250px) {
+		grid-template-columns: 1fr 1fr;
+	}
+	@media screen and (max-width: 450px) {
+		grid-template-columns: 40vw 40vw;
+		grid-template-rows: 1vh 1v;
+	}
 `;
 
 const EmptyContainer = styled.div`
@@ -98,8 +109,8 @@ function UserList({ searchQuery }) {
 					<UserListContainer>
 						{userData.map((user) => (
 							<UserListItem
-								key={user._id}
-								id={user._id}
+								key={user.id}
+								id={user.id}
 								title={user.name}
 								email={user.email}
 								picture={user.image}

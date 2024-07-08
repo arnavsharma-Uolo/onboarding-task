@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as ImageSVG } from '../../assets/login.svg';
-import { ReactComponent as LogoSVG } from '../../assets/logo.svg';
+import { ReactComponent as Logo } from '../../assets/logo_lg.svg';
 
 const LoginPageContainer = styled.div`
 	display: flex;
@@ -16,6 +16,9 @@ const ImageContainer = styled.div`
 	.Image {
 		border-radius: 18px;
 	}
+	@media screen and (max-width: 1000px) {
+		display: none;
+	}
 `;
 
 const FormContainer = styled.div`
@@ -26,10 +29,15 @@ const FormContainer = styled.div`
 	background: #ffffff;
 `;
 
+const LogoSVG = styled(Logo)`
+	border-bottom: 1px solid #d0d5dd;
+	padding-bottom: 20px;
+`;
+
 const FormContent = styled.div`
 	gap: 10px;
 	padding-top: 30px;
-	padding-bottom: 30px;
+	padding-bottom: 40px;
 `;
 
 const FormContentText = styled.p`
@@ -38,17 +46,22 @@ const FormContentText = styled.p`
 	font-family: 'Outfit';
 	font-size: 48px;
 	font-weight: 700;
-	line-height: 60.48px;
-	letter-spacing: 0.25px;
+
+	@media screen and (max-width: 1000px) {
+		font-size: 32px;
+	}
 `;
 
 const FormContentSubText = styled.p`
 	padding: 0;
 	margin: 0;
 	font-family: 'Open Sans';
-	font-size: 14px;
+	font-size: 0.9rem;
 	font-weight: 400;
-	line-height: 19.07px;
+	color: #3f3f3f;
+	@media screen and (max-width: 1000px) {
+		font-size: 0.8rem;
+	}
 `;
 
 const Form = styled.form`
@@ -65,13 +78,27 @@ const FormInput = styled.div`
 	justify-content: center;
 	flex-direction: column;
 	padding-bottom: 25px;
+	font-family: 'Open Sans';
+	font-size: 0.9rem;
+	font-weight: 600;
+	text-align: left;
+	margin-bottom: 10px;
 
 	input {
-		border: 1px solid #5b35da;
+		border: 1px solid #e4e4e4;
 		padding: 12px;
 		border-radius: 8px;
 		width: 94%;
 		margin-top: 5px;
+		transition: all 0.3s ease;
+
+		&:focus {
+			border: 1px solid #5b35da;
+			outline: none;
+		}
+	}
+	@media screen and (max-width: 1000px) {
+		font-size: 0.8rem;
 	}
 `;
 
@@ -87,6 +114,9 @@ const FormButton = styled.button`
 	border-radius: 8px;
 	border: 0px;
 	background-color: #5b35da;
+	@media screen and (max-width: 1000px) {
+		font-size: 12px;
+	}
 `;
 
 function LoginPage() {

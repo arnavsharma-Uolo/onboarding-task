@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 
 import { handleError, handleNotFound } from './middlewares/middlewares';
 import { MONGODB_URI } from './constants';
-import { client as elastic_search_client } from './services/elasticsearch.service';
+import { client as elastic_search_client } from './services/elasticsearch/elasticsearch.service';
 
 mongoose
   .connect(MONGODB_URI)
@@ -33,6 +33,11 @@ expressApp.use(cookieParserMiddleware());
 expressApp.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
+
+// ElasticSearch Index setup
+import { setupIndex } from './services/elasticsearch/user.elasticsearch';
+
+setupIndex();
 
 // Importing API routes
 import apiRoutes from './route';

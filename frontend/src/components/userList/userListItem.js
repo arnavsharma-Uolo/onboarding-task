@@ -9,7 +9,7 @@ const UserListItemContainer = styled.div`
 	align-items: center;
 	background: #f6f6f6;
 	border-radius: 16px;
-	opacity: ${(props) => props.opacity || 1};
+	opacity: ${(props) => props.deleting ? 0.5 : 1};
 
 	&:hover {
 		button {
@@ -35,9 +35,11 @@ const UserListItemImageError = styled.div`
 const UserListItemImage = styled.img`
 	width: 100%;
 	height: 100%;
-	min-height: 300px;
 	object-fit: cover;
 	border-radius: 16px 16px 0 0;
+	@media screen and (max-width: 500px) {
+		
+	}
 `;
 
 const UserListItemContent = styled.div`
@@ -89,10 +91,11 @@ const DeleteButton = styled.button`
 
 function UserListItem({ id, title, email, picture, onDeleted }) {
 	const [imageError, setImageError] = useState(false);
-	const [opacity, setOpacity] = useState(1);
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const handleDelete = async (id) => {
-		setOpacity(0.5);
+		setIsDeleting(true);
+
 		const requestOptions = {
 			method: 'DELETE',
 			headers: {
@@ -109,17 +112,19 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 
 			if (result.success === false) throw new Error(result.message);
 
-			onDeleted();
+			setTimeout(() => {
+			  onDeleted();
+			}, 2000);
 		} catch (error) {
-			setOpacity(1);
+			setIsDeleting(false);
 			toast.error('Something went wrong. Please try again.');
 			console.log(error);
 		}
 	};
 
 	return (
-		<UserListItemContainer opacity={opacity}>
-			<DeleteButton onClick={() => handleDelete(id)}>X</DeleteButton>
+		<UserListItemContainer deleting={isDeleting}>
+			<DeleteButton onClick={() => handleDelete(id)} disabled={isDeleting}>X</DeleteButton>
 			{picture && !imageError ? (
 				<UserListItemImage
 					src={picture}
@@ -131,8 +136,8 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 				<UserListItemImageError>No Image Found</UserListItemImageError>
 			)}
 			<UserListItemContent>
-				<Bold>{title}</Bold>
-				<p>{email}</p>
+				<Bold>{title ? title : `...`}</Bold>
+				<p>{email ? email : `...`}</p>
 			</UserListItemContent>
 		</UserListItemContainer>
 	);
