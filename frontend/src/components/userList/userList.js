@@ -66,6 +66,7 @@ function UserList({ searchQuery }) {
 			headers: {
 				'Content-Type': 'application/json',
 			},
+			credentials: 'include',
 		};
 
 		try {
@@ -85,7 +86,7 @@ function UserList({ searchQuery }) {
 			if (currPage > pageCount) setCurrPage(1);
 		} catch (error) {
 			setErrorMessage('Failed to fetch users...');
-			toast.error('Something went wrong. Please try again.');
+			toast.error('Server Connection Lost. Try Refreshing the Page');
 		} finally {
 			setIsLoading(false);
 		}

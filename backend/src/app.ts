@@ -6,7 +6,7 @@ import path from 'path';
 import mongoose from 'mongoose';
 
 import { handleError, handleNotFound } from './middlewares/middlewares';
-import { MONGODB_URI } from './constants';
+import { MONGODB_URI, ORIGIN_URL } from './constants';
 import { client as elastic_search_client } from './services/elasticsearch/elasticsearch.service';
 
 mongoose
@@ -25,7 +25,12 @@ elastic_search_client
 
 const expressApp = express();
 expressApp.use(morganLogger('dev'));
-expressApp.use(corsMiddleware());
+expressApp.use(
+  corsMiddleware({
+    origin: ORIGIN_URL,
+    credentials: true,
+  }),
+);
 expressApp.use(express.json());
 expressApp.use(cookieParserMiddleware());
 

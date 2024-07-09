@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../lib/constants';
 
 const UserListItemContainer = styled.div`
 	position: relative;
@@ -108,24 +109,29 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 			headers: {
 				'Content-Type': 'application/json',
 			},
+			credentials: 'include',
 		};
 
 		try {
 			const response = await fetch(
-				`http://localhost:8000/api/v1/user/${id}`,
+				`${BACKEND_URL}/v1/user/${id}`,
 				requestOptions,
 			);
 			const result = await response.json();
 
-			if (result.success === false) throw new Error(result.message);
+			if (result.success === false) {
+				toast.error(result.error);
+				setIsDeleting(false);
 
+				return;
+			}
 			setTimeout(() => {
 				onDeleted();
-			}, 2000);
+			}, 500);
 		} catch (error) {
 			setIsDeleting(false);
-			toast.error('Something went wrong. Please try again.');
-			console.log(error);
+			toast.error('Server Connection Lost. Try Refreshing the Page');
+			console.error(error);
 		}
 	};
 

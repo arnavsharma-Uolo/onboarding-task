@@ -8,6 +8,7 @@ import { ReactComponent as TeamMemberSelectedIcon } from '../../assets/team_memb
 import { ReactComponent as Logo } from '../../assets/logo_lg.svg';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
+import { logoutUser } from '../../lib/LogoutUser';
 
 const SidebarContainer = styled.div`
 	display: block;
@@ -144,7 +145,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 						))}
 					</div>
 					<div className='items-end'>
-						<LogoutContainer sidebarOpen={sidebarOpen}>
+						<LogoutContainer sidebarOpen={sidebarOpen} onClick={logoutUser}>
 							<LogoutIcon /> Logout
 						</LogoutContainer>
 					</div>

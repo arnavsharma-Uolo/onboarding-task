@@ -1,6 +1,12 @@
 import styled from 'styled-components';
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ImageSVG } from '../../assets/login.svg';
 import { ReactComponent as Logo } from '../../assets/logo_lg.svg';
+import { encryptText } from '../../lib/services/encryptText';
+import { BACKEND_URL, encryptionKey } from '../../lib/constants';
+import { toast } from 'react-toastify';
 
 const LoginPageContainer = styled.div`
 	display: flex;
@@ -15,8 +21,8 @@ const LoginPageContainer = styled.div`
 const ImageContainer = styled.div`
 	.Image {
 		border-radius: 18px;
-		width:100%;
-		height:auto;
+		width: 100%;
+		height: auto;
 	}
 	@media screen and (max-width: 928px) {
 		display: none;
@@ -121,7 +127,57 @@ const FormButton = styled.button`
 	}
 `;
 
-function LoginPage() {
+function LoginPage({ user, setUser }) {
+	const navigate = useNavigate();
+
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		if (user) navigate('/');
+	}, [user, navigate]);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setIsLoading(true);
+
+		try {
+			const requestOptions = {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					email: email,
+					password: await encryptText(password, encryptionKey),
+				}),
+				credentials: 'include',
+			};
+
+			const response = await fetch(
+				`${BACKEND_URL}/v1/auth/login`,
+				requestOptions,
+			);
+			const result = await response.json();
+
+			if (!result.success) {
+				toast.error(result.error);
+				return;
+			}
+			Cookies.set('accessToken', result.data.access_token);
+			Cookies.set('refreshToken', result.data.refresh_token);
+			setUser(result.data);
+
+			navigate('/');
+		} catch (error) {
+			toast.error('Server Connection Lost. Try Refreshing the Page');
+			console.error(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
 		<LoginPageContainer>
 			<ImageContainer>
@@ -138,13 +194,25 @@ function LoginPage() {
 				<Form>
 					<FormInput>
 						<label>Enter Email</label>
-						<input type='email' placeholder='Email' />
+						<input
+							type='email'
+							placeholder='Email'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
 					</FormInput>
 					<FormInput>
 						<label>Enter Password</label>
-						<input type='password' placeholder='*******' />
+						<input
+							type='password'
+							placeholder='*******'
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
 					</FormInput>
-					<FormButton type='submit'>Login</FormButton>
+					<FormButton type='submit' onClick={handleSubmit} disabled={isLoading}>
+						Login
+					</FormButton>
 				</Form>
 			</FormContainer>
 		</LoginPageContainer>

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import profilePic from '../../assets/profilePic.svg';
-import { useState } from 'react';
 import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
 import { ReactComponent as DropDown } from '../../assets/drop_down.svg';
+import { logoutUser } from '../../lib/LogoutUser';
+import { useState } from 'react';
 
 const ProfileContainer = styled.div`
 	position: relative;
@@ -29,6 +30,7 @@ const ProfileContent = styled.div`
 const ProfileImage = styled.img`
 	width: 3rem;
 	height: 3rem;
+	border-radius: 50%;
 	@media screen and (max-width: 870px) {
 		width: 24px;
 		height: 24px;
@@ -50,6 +52,7 @@ const DropDownIcon = styled(DropDown)`
 		display: none;
 	}
 `;
+
 const ProfileModal = styled.div`
 	position: absolute;
 	top: 90%;
@@ -76,7 +79,7 @@ const ProfileModal = styled.div`
 	}
 `;
 
-function Profile() {
+function Profile({ user }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const toggleModal = () => {
@@ -86,12 +89,14 @@ function Profile() {
 	return (
 		<ProfileContainer>
 			<ProfileContent onClick={toggleModal}>
-				<ProfileImage src={profilePic} alt='profile' />
-				<ProfileText>Vikrant</ProfileText>
+				<ProfileImage src={user?.image || profilePic} alt='profile' />
+				<ProfileText>
+					{user?.name ? user.name.split(' ')[0] : 'User'}
+				</ProfileText>
 				<DropDownIcon />
 			</ProfileContent>
 			{isModalOpen && (
-				<ProfileModal>
+				<ProfileModal onClick={logoutUser}>
 					<LogoutIcon />
 					<p>Logout</p>
 				</ProfileModal>

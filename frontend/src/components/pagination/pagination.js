@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { ReactComponent as LeftArrowSVG } from '../../assets/left_arrow.svg';
+import { ReactComponent as RightArrowSVG } from '../../assets/right_arrow.svg';
 
 const PaginationContainer = styled.div`
 	display: flex;
@@ -36,6 +38,24 @@ const PaginationButton = styled.button`
 	}
 `;
 
+const RightArrowIcon = styled(RightArrowSVG)`
+	width: 11px;
+	height: 11px;
+	@media screen and (max-width: 425px) {
+		width: 8px;
+		height: 8px;
+	}
+`;
+
+const LeftArrowIcon = styled(LeftArrowSVG)`
+	width: 11px;
+	height: 11px;
+	@media screen and (max-width: 425px) {
+		width: 8px;
+		height: 8px;
+	}
+`;
+
 const PaginationButtonActive = styled(PaginationButton)`
 	background: #561fe7;
 	color: #ffffff;
@@ -70,7 +90,7 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
 				onClick={() => setCurrPage(currPage - 1)}
 				disabled={currPage === 1}
 			>
-				{'<'}
+				<LeftArrowIcon />
 			</PaginationButton>
 			{startPage > 1 && (
 				<PaginationButton onClick={() => shiftPages('prev')}>
@@ -98,7 +118,7 @@ function Pagination({ currPage, setCurrPage, totalPages }) {
 				onClick={() => setCurrPage(currPage + 1)}
 				disabled={currPage === totalPages}
 			>
-				{'>'}
+				<RightArrowIcon />
 			</PaginationButton>
 		</PaginationContainer>
 	) : (

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import Header from './components/header/Header';
 import Sidebar from './components/sidebar/Sidebar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Define styled components
 const AppContainer = styled.div`
@@ -16,15 +17,26 @@ const AppContent = styled.div`
 	overflow-y: auto;
 `;
 
-function Layout({ Component }) {
+function Layout({ user, Component }) {
+	const navigate = useNavigate();
+	useEffect(() => {
+		if (!user) navigate('/login');
+	});
+
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
 		<>
-			<Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-			<AppContainer>
-				<Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-				<AppContent sidebarOpen={sidebarOpen}>{Component}</AppContent>
-			</AppContainer>
+			<Header
+				user={user}
+				sidebarOpen={sidebarOpen}
+				setSidebarOpen={setSidebarOpen}
+			/>
+			{user && (
+				<AppContainer>
+					<Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+					<AppContent sidebarOpen={sidebarOpen}>{Component}</AppContent>
+				</AppContainer>
+			)}
 		</>
 	);
 }

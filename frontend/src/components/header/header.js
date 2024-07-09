@@ -24,7 +24,7 @@ const HeaderHamburger = styled(HamburgerIcon)`
 	}
 `;
 
-function Header({ sidebarOpen, setSidebarOpen }) {
+function Header({ user, sidebarOpen, setSidebarOpen }) {
 	return (
 		<StyledHeader sidebarOpen={sidebarOpen}>
 			<HeaderContent>
@@ -32,7 +32,7 @@ function Header({ sidebarOpen, setSidebarOpen }) {
 				<Link to='/'>
 					<Logo />
 				</Link>
-				<Profile />
+				<Profile user={user} />
 			</HeaderContent>
 		</StyledHeader>
 	);

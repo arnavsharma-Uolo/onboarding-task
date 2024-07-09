@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import resizeImage from './sharp.service';
 import { addFiles, getFileURL } from './s3.service';
 import { CustomError } from '../lib/error/custom.error';
-import { User } from '../models/user.model';
+import { generateUserToken, User } from '../models/user.model';
 import { addDocument, searchDocument, updateDocument } from './elasticsearch/elasticsearch.service';
 import { decryptText } from '../lib/decryptText';
 import { ELASTICSEARCH_USER_INDEX, PASSWORD_ENCRYPTION_KEY } from '../constants';
@@ -49,7 +49,7 @@ export const getUsersServiceMongoDB = async (q: string = '', page_number: number
   }
 
   const total_count = await User.countDocuments(filter);
-  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ updatedAt: -1 }).skip(startIndex).limit(limit);
+  const fetched_user_list = await User.find(filter, { _id: 1, name: 1, email: 1, image: 1 }).sort({ createdAt: -1 }).skip(startIndex).limit(limit);
 
   const user_data_list = await Promise.all(
     fetched_user_list.map(async (user) => {
@@ -65,11 +65,11 @@ export const getUsersServiceMongoDB = async (q: string = '', page_number: number
 };
 
 export const getUserService = async (id: string) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid ID.');
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid User.');
 
   await User.findByIdAndUpdate(id, { deleted_at: null });
 
-  const result = await User.findOne({ _id: id, deleted_at: null }, { name: 1, email: 1, _id: 1, image: 1 }).lean();
+  const result = await User.findOne({ _id: id, deleted_at: null }, { name: 1, email: 1, _id: 1, image: 1, access_token: 1, refresh_token: 1 }).lean();
   if (!result) throw new CustomError(404, 'Not Found', 'User not found.');
 
   const imageURL = await getProfilePicture(result.image);
@@ -79,6 +79,8 @@ export const getUserService = async (id: string) => {
     name: result.name,
     email: result.email,
     image: imageURL,
+    access_token: result.access_token,
+    refresh_token: result.refresh_token,
   };
 
   return user_data;
@@ -123,7 +125,7 @@ export const addUserService = async (name: string, email: string, password: stri
 };
 
 export const updateUserService = async (id: string, name: string, email: string) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid ID.');
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid User.');
 
   const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { name, email }, { new: true });
 
@@ -135,7 +137,7 @@ export const updateUserService = async (id: string, name: string, email: string)
 };
 
 export const deleteUserService = async (id: string) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid ID.');
+  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid User.');
 
   const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { deleted_at: new Date() }, { new: true });
 
@@ -146,7 +148,20 @@ export const deleteUserService = async (id: string) => {
   await updateDocument(ELASTICSEARCH_USER_INDEX, id, { deleted_at: new Date() });
 };
 
-const getProfilePicture = async (image_key: string | null | undefined = '') => {
+export const validateUserCredentials = async (email: string, password: string) => {
+  const user = await User.findOne({ email, deleted_at: null });
+  if (!user) throw new CustomError(404, 'Not Found', 'User not found.');
+
+  if (!bcrypt.compareSync(await decryptText(password, PASSWORD_ENCRYPTION_KEY), user.password)) {
+    throw new CustomError(400, 'Bad Request', 'Incorrect password.');
+  }
+  const { access_token, refresh_token } = await generateUserToken(user);
+  const imageURL = await getProfilePicture(user.image);
+  const userInfo = { id: user._id.toString(), name: user.name, email: user.email, access_token, refresh_token, image: imageURL };
+  return { access_token, refresh_token, userInfo };
+};
+
+export const getProfilePicture = async (image_key: string | null | undefined = '') => {
   if (!image_key) return '';
 
   return getFileURL(image_key);

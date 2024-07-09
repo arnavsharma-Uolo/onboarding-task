@@ -35,6 +35,7 @@ export const addUser = controllerWrapper(async (req, res) => {
 // DELETE /api/v1/user/:id
 export const deleteUser = controllerWrapper(async (req, res) => {
   const { id } = userIDSchema.parse(req.params);
+  if (id === req.user.id.toString()) throw new CustomError(400, 'Invalid Payload', 'User cannot delete himself');
 
   await deleteUserService(id);
 

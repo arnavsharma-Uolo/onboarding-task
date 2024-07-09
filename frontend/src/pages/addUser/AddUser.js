@@ -1,6 +1,7 @@
+/* eslint-disable no-useless-escape */
 import styled from 'styled-components';
 import ModalComponent from '../../components/modal/Modal';
-import { encryptionKey } from '../../lib/constants';
+import { BACKEND_URL, encryptionKey } from '../../lib/constants';
 import { encryptText } from '../../lib/services/encryptText';
 import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as DownloadButtonIcon } from '../../assets/download_button.svg';
@@ -36,7 +37,7 @@ const FormContainer = styled.form`
 		width: 80%%;
 		border: 0;
 	}
-		@media screen and (max-width: 425px) {
+	@media screen and (max-width: 425px) {
 		width: 100%;
 		border: 0;
 	}
@@ -57,6 +58,7 @@ const ActionContainer = styled.div`
 
 const Button = styled.button`
 	width: 7rem;
+	min-width: fit-content;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 1rem;
 	font-weight: 600;
@@ -230,7 +232,8 @@ function AddUser() {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
 
-		const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+		const emailRegex =
+			/^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
 
 		if (name === 'name') {
 			setFormDataError({
@@ -254,6 +257,11 @@ function AddUser() {
 					value.length < MIN_PASSWORD_LENGTH
 						? `Password must be at least ${MIN_PASSWORD_LENGTH} characters`
 						: '',
+			});
+			setFormDataError({
+				...formDataError,
+				confirmPassword:
+					value !== formData.password ? 'Passwords do not match' : '',
 			});
 		}
 		if (name === 'confirmPassword') {
@@ -287,15 +295,20 @@ function AddUser() {
 	};
 
 	useEffect(() => {
-		setDisabled(
+		const disable =
+			formDataError.name ||
+			formDataError.email ||
+			formDataError.password ||
+			formDataError.confirmPassword ||
+			formDataError.image ||
 			!formData.name ||
-				!formData.email ||
-				!formData.password ||
-				!formData.confirmPassword ||
-				!formData.image ||
-				!(formData.password === formData.confirmPassword),
-		);
-	}, [formData]);
+			!formData.email ||
+			!formData.password ||
+			!formData.confirmPassword ||
+			!formData.image ||
+			!(formData.password === formData.confirmPassword);
+		setDisabled(disable);
+	}, [formData, formDataError]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -314,23 +327,21 @@ function AddUser() {
 			const requestOptions = {
 				method: 'POST',
 				body: data,
+				credentials: 'include',
 			};
 
-			const response = await fetch(
-				`http://localhost:8000/api/v1/user`,
-				requestOptions,
-			);
+			const response = await fetch(`${BACKEND_URL}/v1/user`, requestOptions);
 			const result = await response.json();
 
 			if (result.success === false) {
 				toast.error(result.error);
-				throw new Error(result.message);
+				return;
 			}
 
 			emptyFields();
 			setIsModalOpen(true);
 		} catch (error) {
-			toast.error('Something went wrong. Please try again.');
+			toast.error('Server Connection Lost. Try Refreshing the Page');
 			console.error(error);
 		} finally {
 			setIsLoading(false);
@@ -398,7 +409,7 @@ function AddUser() {
 							)}
 
 							{!formData.image && !imageURL ? (
-								<DownloadButton />
+								<DownloadButton onClick={triggerFileInputClick} />
 							) : (
 								<RemoveButton onClick={() => handleImageRemove()} />
 							)}
