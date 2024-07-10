@@ -25,6 +25,7 @@ const ProfileContent = styled.div`
 	}
 	@media screen and (max-width: 870px) {
 		padding: 0;
+		cursor: default;
 	}
 `;
 
@@ -40,8 +41,9 @@ const ProfileImage = styled.img`
 
 const ProfileText = styled.span`
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1rem;
+	font-size: 1.3rem;
 	font-weight: 600;
+	color: #344054;
 
 	@media screen and (max-width: 870px) {
 		display: none;
@@ -71,6 +73,7 @@ const ProfileModal = styled.div`
 	font-family: 'Open Sans', sans-serif;
 	font-size: 1rem;
 	font-weight: 400;
+	cursor: pointer;
 	p {
 		margin: 0;
 	}
@@ -85,6 +88,9 @@ function Profile({ user }) {
 	const [isGlobalModalOpen, setIsGlobalModalOpen] = useState(false);
 
 	const toggleModal = () => {
+		if (window.innerWidth <= 870) {
+			return;
+		}
 		setIsProfileModalOpen(!isProfileModalOpen);
 	};
 

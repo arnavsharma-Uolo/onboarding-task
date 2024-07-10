@@ -44,7 +44,7 @@ function getUserFromSession() {
 function setUserInSession(data) {
 	const user_data = {
 		...data,
-		expiry: Date.getTime() + 3600000,
+		expiry: new Date().getTime() + 3600000,
 	};
 	sessionStorage.setItem('user', JSON.stringify(user_data));
 }

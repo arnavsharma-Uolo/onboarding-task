@@ -4,7 +4,6 @@ import Sidebar from './components/sidebar/Sidebar';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Define styled components
 const AppContainer = styled.div`
 	display: flex;
 	flex: 1;

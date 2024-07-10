@@ -18,16 +18,24 @@ const settings = {
         max_gram: 20,
         token_chars: ['letter', 'digit', 'punctuation', 'symbol'],
       },
+      standard_tokenizer: {
+        type: 'standard',
+      },
     },
     analyzer: {
       autocomplete: {
         type: 'custom',
-        tokenizer: 'autocomplete_tokenizer',
+        tokenizer: 'standard_tokenizer',
         filter: ['lowercase', 'autocomplete_filter'],
       },
       keyword_lowercase: {
         type: 'custom',
         tokenizer: 'keyword',
+        filter: ['lowercase'],
+      },
+      standard_lowercase: {
+        type: 'custom',
+        tokenizer: 'standard',
         filter: ['lowercase'],
       },
     },
@@ -42,12 +50,12 @@ const mappings = {
     name: {
       type: 'text',
       analyzer: 'autocomplete',
-      search_analyzer: 'keyword_lowercase',
+      search_analyzer: 'standard_lowercase',
     },
     email: {
       type: 'text',
       analyzer: 'autocomplete',
-      search_analyzer: 'keyword_lowercase',
+      search_analyzer: 'standard_lowercase',
     },
     deleted_at: { type: 'date' },
   },

@@ -242,6 +242,7 @@ function LoginPage({ user, setUser }) {
 					<FormInput>
 						<label>Enter Email</label>
 						<input
+							name='email'
 							type='email'
 							placeholder='Email'
 							value={email}
@@ -251,13 +252,14 @@ function LoginPage({ user, setUser }) {
 					<FormInput>
 						<label>Enter Password</label>
 						<input
+							name='password'
 							type='password'
 							placeholder='*******'
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 					</FormInput>
-					<ErrorMessage show={!!error}>{error}</ErrorMessage>
+					<ErrorMessage show={error ? 'true' : 'false'}>{error}</ErrorMessage>
 					<FormButton type='submit' onClick={handleSubmit} disabled={isLoading}>
 						{isLoading ? <Loader /> : 'Login'}
 					</FormButton>

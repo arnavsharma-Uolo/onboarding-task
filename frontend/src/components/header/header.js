@@ -18,7 +18,7 @@ const HeaderContent = styled.div`
 
 const HeaderHamburger = styled(HamburgerIcon)`
 	display: none;
-
+	cursor: pointer;
 	@media screen and (max-width: 870px) {
 		display: block;
 	}
@@ -26,7 +26,7 @@ const HeaderHamburger = styled(HamburgerIcon)`
 
 function Header({ user, sidebarOpen, setSidebarOpen }) {
 	return (
-		<StyledHeader sidebarOpen={sidebarOpen}>
+		<StyledHeader>
 			<HeaderContent>
 				<HeaderHamburger onClick={() => setSidebarOpen(true)} />
 				<Link to='/'>

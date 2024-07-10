@@ -26,8 +26,8 @@ const PaginationButton = styled.button`
 	transition: all 0.3s ease;
 
 	&:hover {
-		background: #581fe753;
-		cursor: pointer;
+		background: ${(props) => (props.disabled ? '#ffffff' : '#581fe753')};
+		cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 	}
 
 	@media screen and (max-width: 425px) {

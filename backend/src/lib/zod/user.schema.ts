@@ -1,7 +1,10 @@
 import { z } from 'zod';
 
 export const getUserListSchema = z.object({
-  q: z.string().optional(),
+  q: z
+    .string()
+    .optional()
+    .transform((val) => val?.trim() || ''),
   page: z
     .string()
     .optional()

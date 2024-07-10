@@ -80,7 +80,6 @@ function UserList({ searchQuery }) {
 			if (currPage > pageCount) setCurrPage(1);
 		} catch (error) {
 			setErrorMessage('Failed to fetch users...');
-			toast.error('Server Connection Lost. Try Refreshing the Page');
 		} finally {
 			setIsLoading(false);
 		}

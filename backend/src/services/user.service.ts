@@ -14,7 +14,7 @@ export const getUsersService = async (q: string = '', page_number: number, limit
   const query: any = {
     bool: {
       must: q ? [] : { match_all: {} },
-      should: q ? [{ match: { name: q } }, { match: { email: q } }] : undefined,
+      should: q ? [{ match: { name: q } }, { match: { email: q } }, { wildcard: { name: `*${q}*` } }, { wildcard: { email: `*${q}*` } }] : undefined,
       minimum_should_match: q ? 1 : undefined,
       filter: [{ bool: { must_not: { exists: { field: 'deleted_at' } } } }],
     },
@@ -182,6 +182,7 @@ export const deleteUserService = async (id: string) => {
     await session.commitTransaction();
   } catch (error) {
     await session.abortTransaction();
+    if (error instanceof CustomError) throw error;
     throw new CustomError(500, 'Internal Server Error', 'Server Error: Failed to delete user.');
   } finally {
     session.endSession();

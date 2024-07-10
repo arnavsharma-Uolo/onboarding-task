@@ -70,6 +70,11 @@ const LogoutContainer = styled.div`
 	height: 3rem;
 	padding: 0.5rem 1rem;
 	gap: 0.5rem;
+	cursor: pointer;
+
+	&:hover {
+		background: #f6f6f6;
+	}
 `;
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
@@ -142,7 +147,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
 	return (
 		<>
-					<ModalComponent
+			<ModalComponent
 				isOpen={isGlobalModalOpen}
 				icon={'done'}
 				message='You have been successfully logout '

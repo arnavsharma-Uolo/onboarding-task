@@ -3,6 +3,7 @@ import UserList from '../../components/userList/UserList';
 import useDebounce from '../../lib/services/Debounce';
 import { useState } from 'react';
 import { ReactComponent as SearchIconSVG } from '../../assets/search_icon.svg';
+import { ReactComponent as ClearIconSVG } from '../../assets/clear_icon.svg';
 
 const ShowUserContainer = styled.div`
 	box-sizing: border-box;
@@ -45,17 +46,41 @@ const SearchIcon = styled(SearchIconSVG)`
 	width: 20px;
 `;
 
+const CancelIcon = styled(ClearIconSVG)`
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 10rem;
+	width: 20px;
+	height: auto;
+
+	&:hover {
+		cursor: pointer;
+	}
+	@media screen and (max-width: 500px) {
+		display: none;
+	}
+`;
+
 const SearchInput = styled.input`
 	border: 2px solid #d0d5dd;
+	border-right: 1px solid #d0d5dd;
 	border-radius: 12px 0px 0px 12px;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 16px;
-	font-weight: 400;
+	font-weight: 600;
 	line-height: 24px;
 	padding: 1rem 2rem 1rem 3rem;
 	text-align: left;
-	color: #98a2b3;
+	color: #101828;
+
 	width: calc(100% - 10rem);
+
+	&::placeholder {
+		font-weight: 400;
+		color: #98a2b3;
+	}
+
 	@media screen and (max-width: 500px) {
 		padding: 1rem 0rem 1rem 3rem;
 		width: 100%;
@@ -120,6 +145,7 @@ function ShowUser() {
 						onChange={handleInputChange}
 					/>
 					<SearchButton>Search</SearchButton>
+					<CancelIcon onClick={() => setSearchQuery('')} />
 				</SearchInputContainer>
 				<div>
 					<UserList searchQuery={debouncedSearchQuery} />

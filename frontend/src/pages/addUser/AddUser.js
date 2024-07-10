@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-escape */
 import styled from 'styled-components';
+import fetch_api from '../../lib/services/api_util';
 import toast from 'react-hot-toast';
 import ModalComponent from '../../components/modal/Modal';
 import { encryptionKey } from '../../lib/constants';
@@ -8,7 +9,7 @@ import { ReactComponent as DownloadButtonIcon } from '../../assets/download_butt
 import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as RemoveButtonIcon } from '../../assets/remove_button.svg';
 import { useEffect, useRef, useState } from 'react';
-import fetch_api from '../../lib/services/api_util';
+import { useNavigate } from 'react-router-dom';
 
 const AddUserContainer = styled.div`
 	display: flex;
@@ -18,7 +19,7 @@ const AddUserContainer = styled.div`
 	box-sizing: border-box;
 	flex-direction: column;
 	margin: 2rem;
-	@media screen and (max-width: 767px) {
+	@media screen and (max-width: 870px) {
 		margin: 0;
 		padding-top: 2rem;
 		justify-content: start;
@@ -34,7 +35,7 @@ const FormContainer = styled.form`
 	background: #ffffff;
 	border: 1px solid #eaecf0;
 	border-radius: 16px;
-	@media screen and (max-width: 767px) {
+	@media screen and (max-width: 870px) {
 		width: 80%%;
 		border: 0;
 	}
@@ -100,8 +101,6 @@ const Subtext = styled.span`
 	font-family: 'Open Sans', sans-serif;
 	font-size: 0.7rem;
 	font-weight: 400;
-	line-height: 16.34px;
-	letter-spacing: 0.4000000059604645px;
 	text-align: left;
 	color: #667085;
 `;
@@ -208,6 +207,7 @@ const Loader = styled.span`
 `;
 
 function AddUser() {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -240,7 +240,7 @@ function AddUser() {
 			setFormDataError({
 				...formDataError,
 				[name]:
-					value.length < MIN_NAME_LENGTH
+					value.length < MIN_NAME_LENGTH || value.trim().length === 0
 						? `Name must be at least ${MIN_NAME_LENGTH} characters`
 						: '',
 			});
@@ -317,15 +317,13 @@ function AddUser() {
 
 		try {
 			const body = new FormData();
-			body.append('name', formData.name);
-			body.append('email', formData.email);
+			body.append('name', formData.name.trim());
+			body.append('email', formData.email.trim());
 			body.append(
 				'password',
 				await EncryptText(formData.password, encryptionKey),
 			);
 			body.append('file', formData.image);
-
-			console.log(body);
 
 			const result = await fetch_api('POST', '/v1/user', body);
 			if (result.success === false) {
@@ -336,7 +334,6 @@ function AddUser() {
 			emptyFields();
 			setIsModalOpen(true);
 		} catch (error) {
-			toast.error('Server Connection Lost. Try Refreshing the Page');
 			console.error(error);
 		} finally {
 			setIsLoading(false);
@@ -363,7 +360,7 @@ function AddUser() {
 
 	const closeModal = () => {
 		setIsModalOpen(false);
-		window.location.href = '/';
+		navigate('/');
 	};
 
 	return (

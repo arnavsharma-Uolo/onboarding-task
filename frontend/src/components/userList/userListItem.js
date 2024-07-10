@@ -89,7 +89,7 @@ const DeleteButton = styled.button`
 	border: 1px solid #e2e2e2;
 	border-radius: 0 16px 0 16px;
 	opacity: 0;
-	transition: opacity 0.3s;
+	transition: all 0.3s ease;
 	font-size: large;
 
 	&:hover {
@@ -118,7 +118,6 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 			}, 500);
 		} catch (error) {
 			setIsDeleting(false);
-			toast.error('Server Connection Lost. Try Refreshing the Page');
 			console.error(error);
 		}
 	};
