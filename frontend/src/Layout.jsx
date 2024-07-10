@@ -20,14 +20,12 @@ function Layout({ user, Component }) {
 	const navigate = useNavigate();
 	useEffect(() => {
 		if (!user) navigate('/login');
-	});
+	}, [user, navigate]);
 
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	return (
 		<>
 			<Header
-				user={user}
-				sidebarOpen={sidebarOpen}
 				setSidebarOpen={setSidebarOpen}
 			/>
 			{user && (

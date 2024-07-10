@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ModalComponent from '../../components/modal/Modal';
+import ModalComponent from '../modal/Modal';
 import SidebarItem from './SidebarItem';
 import { ReactComponent as AddTeamIcon } from '../../assets/add_team.svg';
 import { ReactComponent as AddTeamSelectedIcon } from '../../assets/add_team_selected.svg';

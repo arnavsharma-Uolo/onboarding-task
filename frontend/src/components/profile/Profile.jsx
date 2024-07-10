@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import profilePic from '../../assets/profilePic.svg';
-import ModalComponent from '../../components/modal/Modal';
+import ModalComponent from '../modal/Modal';
 import { ReactComponent as DropDown } from '../../assets/drop_down.svg';
 import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
 import { logoutUser } from '../../lib/services/LogoutUser';
@@ -83,10 +83,10 @@ const ProfileModal = styled.div`
 	}
 `;
 
-function Profile({ user }) {
+function Profile() {
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [isGlobalModalOpen, setIsGlobalModalOpen] = useState(false);
-
+	const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 	const toggleModal = () => {
 		if (window.innerWidth <= 870) {
 			return;

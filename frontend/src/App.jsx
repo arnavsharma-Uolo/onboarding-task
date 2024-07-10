@@ -34,18 +34,20 @@ function App() {
 			}
 		};
 
+		checkHealth();
+	}, []);
+
+	useEffect(() => {
 		const checkLogin = async () => {
 			try {
-				const response = await ValidateLogin();
-				setUser(response);
+				if (isHealthCheckComplete) setUser(await ValidateLogin());
 			} catch (error) {
-				setUser(null);
+				console.error(error);
 			}
 		};
 
-		checkHealth();
 		checkLogin();
-	}, []);
+	}, [isHealthCheckComplete]);
 
 	return (
 		<AppContainer>
@@ -58,7 +60,7 @@ function App() {
 					<Routes>
 						<Route
 							path='/login'
-							element={<LoginPage user={user} setUser={setUser} />}
+							element={<LoginPage />}
 						/>
 						<Route
 							path='/'

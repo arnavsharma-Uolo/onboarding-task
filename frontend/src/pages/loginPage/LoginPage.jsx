@@ -161,13 +161,14 @@ const Loader = styled.span`
 	}
 `;
 
-function LoginPage({ user, setUser }) {
+function LoginPage() {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+	const user = sessionStorage.getItem('user');
 
 	useEffect(() => {
 		if (user) navigate('/');
@@ -220,7 +221,6 @@ function LoginPage({ user, setUser }) {
 			expiry: new Date().getTime() + 3600000,
 		};
 		sessionStorage.setItem('user', JSON.stringify(user_data));
-		setUser(data);
 
 		navigate('/');
 	};

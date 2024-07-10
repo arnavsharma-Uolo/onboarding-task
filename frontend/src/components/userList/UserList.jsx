@@ -2,7 +2,6 @@ import styled, { keyframes } from 'styled-components';
 import fetch_api from '../../lib/services/api_util';
 import Pagination from '../pagination/Pagination';
 import UserListItem from './UserListItem';
-import toast from 'react-hot-toast';
 import { useCallback, useEffect, useState } from 'react';
 
 const UserListContainer = styled.div`
