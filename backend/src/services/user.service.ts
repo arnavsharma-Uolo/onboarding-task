@@ -87,73 +87,113 @@ export const getUserService = async (id: string) => {
 };
 
 export const addUserService = async (name: string, email: string, password: string, file: any) => {
-  if (!file) throw new CustomError(400, 'Invalid Payload', 'Image is required');
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const userExist = await User.findOne({ email });
+  try {
+    if (!file) throw new CustomError(400, 'Invalid Payload', 'Image is required');
 
-  if (userExist && userExist.deleted_at === null) {
-    throw new CustomError(400, 'Invalid Payload', 'User with this email already exists');
+    const userExist = await User.findOne({ email }).session(session);
+
+    if (userExist && userExist.deleted_at === null) {
+      throw new CustomError(400, 'Invalid Payload', 'User with this email already exists');
+    }
+
+    const values = {
+      name,
+      email,
+      password: bcrypt.hashSync(await decryptText(password, PASSWORD_ENCRYPTION_KEY), 10),
+      image: '',
+      deleted_at: null,
+    };
+
+    const newUser = userExist ? await User.findOneAndUpdate({ email }, values, { new: true, session }) : await User.create([values], { session });
+
+    const userDocument = Array.isArray(newUser) ? newUser[0] : newUser;
+
+    const file_name = `images/profile_${userDocument?._id}`;
+    const profile_image = await resizeImage(file.buffer, 500, 500);
+    await User.findByIdAndUpdate(userDocument?._id, { image: file_name }, { session });
+    await addDocument(
+      ELASTICSEARCH_USER_INDEX,
+      { id: userDocument?._id, name: userDocument?.name, email: userDocument?.email, image: file_name, deleted_at: null },
+      userDocument?._id.toString(),
+    );
+    await addFiles(file_name, file.mimetype, profile_image);
+
+    const user = {
+      id: userDocument?._id,
+      name: userDocument?.name,
+      email: userDocument?.email,
+    };
+
+    await session.commitTransaction();
+    return user;
+  } catch (error) {
+    await session.abortTransaction();
+    if (error instanceof CustomError) throw error;
+    throw new CustomError(500, 'Internal Server Error', 'Server Error: Failed to add user.');
+  } finally {
+    session.endSession();
   }
-
-  const values = {
-    name,
-    email,
-    password: bcrypt.hashSync(await decryptText(password, PASSWORD_ENCRYPTION_KEY), 10),
-    image: '',
-    deleted_at: null,
-  };
-
-  const newUser = userExist ? await User.findOneAndUpdate({ email }, values, { new: true }) : await User.create(values);
-
-  const file_name = `images/profile_${newUser?.id}`;
-  const profile_image = await resizeImage(file.buffer, 500, 500);
-  await addFiles(file_name, file.mimetype, profile_image);
-  await User.findByIdAndUpdate(newUser?.id, { image: file_name });
-  await addDocument(
-    ELASTICSEARCH_USER_INDEX,
-    { id: newUser?._id, name: newUser?.name, email: newUser?.email, image: file_name, deleted_at: null },
-    newUser?._id.toString(),
-  );
-
-  const user = {
-    id: newUser?._id,
-    name: newUser?.name,
-    email: newUser?.email,
-  };
-
-  return user;
 };
 
 export const updateUserService = async (id: string, name: string, email: string) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid User.');
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { name, email }, { new: true });
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid User.');
 
-  if (!result) {
-    throw new CustomError(404, 'Not Found', 'User not found.');
+    const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { name, email }, { new: true, session });
+
+    if (!result) {
+      throw new CustomError(404, 'Not Found', 'User not found.');
+    }
+
+    await updateDocument(ELASTICSEARCH_USER_INDEX, id, { name, email });
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    if (error instanceof CustomError) throw error;
+    throw new CustomError(500, 'Internal Server Error', 'Server Error: Failed to update user.');
+  } finally {
+    session.endSession();
   }
-
-  await updateDocument(ELASTICSEARCH_USER_INDEX, id, { name, email });
 };
 
 export const deleteUserService = async (id: string) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) throw new CustomError(400, 'Bad Request', 'Invalid User.');
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { deleted_at: new Date() }, { new: true });
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new CustomError(400, 'Bad Request', 'Invalid User.');
+    }
 
-  if (!result) {
-    throw new CustomError(404, 'Not Found', 'Document does not exist.');
+    const result = await User.findOneAndUpdate({ _id: id, deleted_at: null }, { deleted_at: new Date() }, { new: true, session });
+
+    if (!result) {
+      throw new CustomError(404, 'Not Found', 'Document does not exist.');
+    }
+
+    await updateDocument(ELASTICSEARCH_USER_INDEX, id, { deleted_at: new Date() });
+
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw new CustomError(500, 'Internal Server Error', 'Server Error: Failed to delete user.');
+  } finally {
+    session.endSession();
   }
-
-  await updateDocument(ELASTICSEARCH_USER_INDEX, id, { deleted_at: new Date() });
 };
 
 export const validateUserCredentials = async (email: string, password: string) => {
   const user = await User.findOne({ email, deleted_at: null });
-  if (!user) throw new CustomError(404, 'Not Found', 'User not found.');
+  if (!user) throw new CustomError(404, 'Not Found', 'Invalid Credentials, Check your email and password.');
 
   if (!bcrypt.compareSync(await decryptText(password, PASSWORD_ENCRYPTION_KEY), user.password)) {
-    throw new CustomError(400, 'Bad Request', 'Incorrect password.');
+    throw new CustomError(400, 'Bad Request', 'Invalid Credentials, Check your email and password.');
   }
   const { access_token, refresh_token } = await generateUserToken(user);
   const imageURL = await getProfilePicture(user.image);

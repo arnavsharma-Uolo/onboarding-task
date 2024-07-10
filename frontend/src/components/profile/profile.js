@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import profilePic from '../../assets/profilePic.svg';
-import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
+import ModalComponent from '../../components/modal/Modal';
 import { ReactComponent as DropDown } from '../../assets/drop_down.svg';
-import { logoutUser } from '../../lib/LogoutUser';
+import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
+import { logoutUser } from '../../lib/services/LogoutUser';
 import { useState } from 'react';
 
 const ProfileContainer = styled.div`
@@ -80,28 +81,47 @@ const ProfileModal = styled.div`
 `;
 
 function Profile({ user }) {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+	const [isGlobalModalOpen, setIsGlobalModalOpen] = useState(false);
 
 	const toggleModal = () => {
-		setIsModalOpen(!isModalOpen);
+		setIsProfileModalOpen(!isProfileModalOpen);
+	};
+
+	const closeGlobalModal = () => {
+		setIsGlobalModalOpen(false);
+		window.location.href = '/login';
+	};
+	const handleLogout = async () => {
+		setIsProfileModalOpen(false);
+		await logoutUser();
+		setIsGlobalModalOpen(true);
 	};
 
 	return (
-		<ProfileContainer>
-			<ProfileContent onClick={toggleModal}>
-				<ProfileImage src={user?.image || profilePic} alt='profile' />
-				<ProfileText>
-					{user?.name ? user.name.split(' ')[0] : 'User'}
-				</ProfileText>
-				<DropDownIcon />
-			</ProfileContent>
-			{isModalOpen && (
-				<ProfileModal onClick={logoutUser}>
-					<LogoutIcon />
-					<p>Logout</p>
-				</ProfileModal>
-			)}
-		</ProfileContainer>
+		<>
+			<ModalComponent
+				isOpen={isGlobalModalOpen}
+				icon={'done'}
+				message='You have been successfully logout '
+				onClose={closeGlobalModal}
+			/>
+			<ProfileContainer>
+				<ProfileContent onClick={toggleModal}>
+					<ProfileImage src={user?.image || profilePic} alt='profile' />
+					<ProfileText>
+						{user?.name ? user.name.split(' ')[0] : 'User'}
+					</ProfileText>
+					<DropDownIcon />
+				</ProfileContent>
+				{isProfileModalOpen && (
+					<ProfileModal onClick={handleLogout}>
+						<LogoutIcon />
+						<p>Logout</p>
+					</ProfileModal>
+				)}
+			</ProfileContainer>
+		</>
 	);
 }
 

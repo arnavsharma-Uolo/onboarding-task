@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import fetch_api from '../../lib/services/api_util';
+import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { BACKEND_URL } from '../../lib/constants';
 
 const UserListItemContainer = styled.div`
 	position: relative;
@@ -104,20 +104,8 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 	const handleDelete = async (id) => {
 		setIsDeleting(true);
 
-		const requestOptions = {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			credentials: 'include',
-		};
-
 		try {
-			const response = await fetch(
-				`${BACKEND_URL}/v1/user/${id}`,
-				requestOptions,
-			);
-			const result = await response.json();
+			const result = await fetch_api('DELETE', `/v1/user/${id}`);
 
 			if (result.success === false) {
 				toast.error(result.error);

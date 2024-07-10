@@ -1,14 +1,15 @@
 import styled from 'styled-components';
+import ModalComponent from '../../components/modal/Modal';
 import SidebarItem from './SidebarItem';
 import { ReactComponent as AddTeamIcon } from '../../assets/add_team.svg';
 import { ReactComponent as AddTeamSelectedIcon } from '../../assets/add_team_selected.svg';
-import { ReactComponent as TeamMemberIcon } from '../../assets/team_member.svg';
-import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
-import { ReactComponent as TeamMemberSelectedIcon } from '../../assets/team_member_selected.svg';
 import { ReactComponent as Logo } from '../../assets/logo_lg.svg';
+import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
+import { ReactComponent as TeamMemberIcon } from '../../assets/team_member.svg';
+import { ReactComponent as TeamMemberSelectedIcon } from '../../assets/team_member_selected.svg';
+import { logoutUser } from '../../lib/services/LogoutUser';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
-import { logoutUser } from '../../lib/LogoutUser';
+import { useEffect, useRef, useState } from 'react';
 
 const SidebarContainer = styled.div`
 	display: block;
@@ -74,6 +75,8 @@ const LogoutContainer = styled.div`
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
 	const location = useLocation();
 	const sidebarRef = useRef();
+	const [isGlobalModalOpen, setIsGlobalModalOpen] = useState(false);
+
 	useEffect(() => {
 		function handleClickOutside(event) {
 			if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -126,32 +129,50 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 			active: location.pathname === '/create-profile',
 		},
 	];
+	const handleLogout = async () => {
+		setSidebarOpen(false);
+		await logoutUser();
+		setIsGlobalModalOpen(true);
+	};
+
+	const closeGlobalModal = () => {
+		setIsGlobalModalOpen(false);
+		window.location.href = '/login';
+	};
 
 	return (
-		<SidebarContainer sidebarOpen={sidebarOpen}>
-			<SidebarContent ref={sidebarRef}>
-				<LogoIcon />
-				<Items>
-					<div className='items'>
-						{sidebar_items.map((sidebarItem, index) => (
-							<SidebarItem
-								key={index}
-								link={sidebarItem.link}
-								title={sidebarItem.title}
-								icon={sidebarItem.icon}
-								active={sidebarItem.active}
-								setSidebarOpen={setSidebarOpen}
-							/>
-						))}
-					</div>
-					<div className='items-end'>
-						<LogoutContainer sidebarOpen={sidebarOpen} onClick={logoutUser}>
-							<LogoutIcon /> Logout
-						</LogoutContainer>
-					</div>
-				</Items>
-			</SidebarContent>
-		</SidebarContainer>
+		<>
+					<ModalComponent
+				isOpen={isGlobalModalOpen}
+				icon={'done'}
+				message='You have been successfully logout '
+				onClose={closeGlobalModal}
+			/>
+			<SidebarContainer sidebarOpen={sidebarOpen}>
+				<SidebarContent ref={sidebarRef}>
+					<LogoIcon />
+					<Items>
+						<div className='items'>
+							{sidebar_items.map((sidebarItem, index) => (
+								<SidebarItem
+									key={index}
+									link={sidebarItem.link}
+									title={sidebarItem.title}
+									icon={sidebarItem.icon}
+									active={sidebarItem.active}
+									setSidebarOpen={setSidebarOpen}
+								/>
+							))}
+						</div>
+						<div className='items-end'>
+							<LogoutContainer sidebarOpen={sidebarOpen} onClick={handleLogout}>
+								<LogoutIcon /> Logout
+							</LogoutContainer>
+						</div>
+					</Items>
+				</SidebarContent>
+			</SidebarContainer>
+		</>
 	);
 }
 

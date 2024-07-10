@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import useDebounce from '../../lib/debounce';
 import UserList from '../../components/userList/UserList';
+import useDebounce from '../../lib/services/Debounce';
 import { useState } from 'react';
 import { ReactComponent as SearchIconSVG } from '../../assets/search_icon.svg';
 

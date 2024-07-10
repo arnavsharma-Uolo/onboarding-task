@@ -16,7 +16,7 @@ const settings = {
         type: 'edge_ngram',
         min_gram: 1,
         max_gram: 20,
-        token_chars: ['letter', 'digit'],
+        token_chars: ['letter', 'digit', 'punctuation', 'symbol'],
       },
     },
     analyzer: {
@@ -68,7 +68,15 @@ const syncDatabase = async (index: string) => {
 };
 
 export const setupIndex = async () => {
-  if (!(await checkIndexExists(ELASTICSEARCH_USER_INDEX))) {
+  let indexExist = false;
+  try {
+    indexExist = await checkIndexExists(ELASTICSEARCH_USER_INDEX);
+  } catch (error) {
+    console.error('Error checking index:', error);
+    return;
+  }
+
+  if (!indexExist) {
     await createIndex(ELASTICSEARCH_USER_INDEX, mappings, settings);
     await syncDatabase(ELASTICSEARCH_USER_INDEX);
     console.log('Index created and synced with database');

@@ -1,8 +1,9 @@
 import styled, { keyframes } from 'styled-components';
+import fetch_api from '../../lib/services/api_util';
 import Pagination from '../pagination/Pagination';
 import UserListItem from './UserListItem';
+import toast from 'react-hot-toast';
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 
 const UserListContainer = styled.div`
 	display: grid;
@@ -61,26 +62,19 @@ function UserList({ searchQuery }) {
 
 	const fetchData = useCallback(async () => {
 		setIsLoading(true);
-		const requestOptions = {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			credentials: 'include',
-		};
+		const LIMIT = 8;
 
 		try {
-			const response = await fetch(
-				`http://localhost:8000/api/v1/user?q=${searchQuery}&page=${currPage}&limit=8`,
-				requestOptions,
+			const result = await fetch_api(
+				'GET',
+				`/v1/user?q=${searchQuery}&page=${currPage}&limit=${LIMIT}`,
 			);
-			const result = await response.json();
 
 			if (result.success === false) throw new Error(result.message);
 
 			setUserData(result.data);
 
-			const pageCount = Math.ceil(result.total_count / 8);
+			const pageCount = Math.ceil(result.total_count / LIMIT);
 			setTotalPages(pageCount);
 
 			if (currPage > pageCount) setCurrPage(1);
@@ -113,8 +107,8 @@ function UserList({ searchQuery }) {
 					<UserListContainer>
 						{userData.map((user) => (
 							<UserListItem
-								key={user.id}
-								id={user.id}
+								key={user.id || user._id}
+								id={user.id || user._id}
 								title={user.name}
 								email={user.email}
 								picture={user.image}

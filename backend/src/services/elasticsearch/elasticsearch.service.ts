@@ -1,4 +1,5 @@
 import { ELASTICSEARCH_URI } from '../../constants';
+import { CustomError } from '../../lib/error/custom.error';
 
 const { Client } = require('@elastic/elasticsearch');
 export const client = new Client({
@@ -11,7 +12,7 @@ export const checkIndexExists = async (index: string) => {
     return body;
   } catch (error) {
     console.error('Error checking index existence:', error);
-    return false;
+    throw new CustomError(500, 'Internal Server Error', 'Error checking index existence');
   }
 };
 
@@ -26,6 +27,7 @@ export const createIndex = async (index: string, mappings: object, settings: obj
     });
   } catch (error) {
     console.error('Error creating index:', error);
+    throw new CustomError(500, 'Internal Server Error', 'Error creating index');
   }
 };
 
@@ -36,6 +38,7 @@ export const deleteIndex = async (index: string) => {
     });
   } catch (error) {
     console.error('Error deleting index:', error);
+    throw new CustomError(500, 'Internal Server Error', 'Error deleting index');
   }
 };
 
@@ -48,6 +51,7 @@ export const addDocument = async (index: string, doc: any, id: string | undefine
     });
   } catch (error) {
     console.error('Error adding user:', error);
+    throw new CustomError(500, 'Internal Server Error', 'Error adding user');
   }
 };
 
@@ -62,6 +66,7 @@ export const updateDocument = async (index: string, id: string, updatedDoc: any)
     });
   } catch (error) {
     console.error('Error updating user:', error);
+    throw new CustomError(500, 'Internal Server Error', 'Error updating user');
   }
 };
 
@@ -93,5 +98,6 @@ export const bulkAddDocuments = async (index: string, documents: any[]) => {
     console.log('Bulk operation completed:', body);
   } catch (error) {
     console.error('Error adding documents in bulk:', error);
+    throw new CustomError(500, 'Internal Server Error', 'Error adding documents in bulk');
   }
 };

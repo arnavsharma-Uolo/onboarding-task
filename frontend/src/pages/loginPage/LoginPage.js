@@ -1,12 +1,14 @@
-import styled from 'styled-components';
+/* eslint-disable no-useless-escape */
 import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import fetch_api from '../../lib/services/api_util';
+import styled from 'styled-components';
+import toast from 'react-hot-toast';
+import { encryptionKey } from '../../lib/constants';
+import { EncryptText } from '../../lib/services/EncryptText';
 import { ReactComponent as ImageSVG } from '../../assets/login.svg';
 import { ReactComponent as Logo } from '../../assets/logo_lg.svg';
-import { encryptText } from '../../lib/services/encryptText';
-import { BACKEND_URL, encryptionKey } from '../../lib/constants';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPageContainer = styled.div`
 	display: flex;
@@ -90,7 +92,6 @@ const FormInput = styled.div`
 	font-size: 0.9rem;
 	font-weight: 600;
 	text-align: left;
-	margin-bottom: 10px;
 
 	input {
 		border: 1px solid #e4e4e4;
@@ -127,11 +128,45 @@ const FormButton = styled.button`
 	}
 `;
 
+const ErrorMessage = styled.div`
+	font-family: 'Open Sans';
+	font-size: 0.8rem;
+	width: 100%;
+	height: 1rem;
+	margin: 0;
+	text-align: right;
+	padding: 0rem 0rem 1rem 0rem;
+	color: red;
+	visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+	opacity: ${(props) => (props.show ? '1' : '0')};
+`;
+
+const Loader = styled.span`
+	width: 1rem;
+	height: 1rem;
+	border: 3px solid #fff;
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+
+	@keyframes rotation {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+`;
+
 function LoginPage({ user, setUser }) {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
@@ -140,42 +175,54 @@ function LoginPage({ user, setUser }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (!email || !password) {
+			setError('Please enter email and password');
+			return;
+		}
+		const emailRegex =
+			/^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
+		if (!emailRegex.test(email)) {
+			setError('Please enter a valid email');
+			return;
+		}
 		setIsLoading(true);
 
 		try {
-			const requestOptions = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					email: email,
-					password: await encryptText(password, encryptionKey),
-				}),
-				credentials: 'include',
+			const body = {
+				email: email,
+				password: await EncryptText(password, encryptionKey),
 			};
 
-			const response = await fetch(
-				`${BACKEND_URL}/v1/auth/login`,
-				requestOptions,
-			);
-			const result = await response.json();
+			const response = await loginUser(body);
 
-			if (!result.success) {
-				toast.error(result.error);
-				return;
+			if (response.success) {
+				handleSuccess(response.data);
+			} else {
+				setError(response.error);
 			}
-			Cookies.set('accessToken', result.data.access_token);
-			Cookies.set('refreshToken', result.data.refresh_token);
-			setUser(result.data);
-
-			navigate('/');
 		} catch (error) {
-			toast.error('Server Connection Lost. Try Refreshing the Page');
+			toast.error(error.message);
 			console.error(error);
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const loginUser = async (body) => {
+		return await fetch_api('POST', '/v1/auth/login', body);
+	};
+
+	const handleSuccess = (data) => {
+		Cookies.set('accessToken', data.access_token);
+		Cookies.set('refreshToken', data.refresh_token);
+		const user_data = {
+			...data,
+			expiry: new Date().getTime() + 3600000,
+		};
+		sessionStorage.setItem('user', JSON.stringify(user_data));
+		setUser(data);
+
+		navigate('/');
 	};
 
 	return (
@@ -210,8 +257,9 @@ function LoginPage({ user, setUser }) {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 					</FormInput>
+					<ErrorMessage show={!!error}>{error}</ErrorMessage>
 					<FormButton type='submit' onClick={handleSubmit} disabled={isLoading}>
-						Login
+						{isLoading ? <Loader /> : 'Login'}
 					</FormButton>
 				</Form>
 			</FormContainer>

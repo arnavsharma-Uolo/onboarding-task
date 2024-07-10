@@ -1,13 +1,14 @@
 /* eslint-disable no-useless-escape */
 import styled from 'styled-components';
+import toast from 'react-hot-toast';
 import ModalComponent from '../../components/modal/Modal';
-import { BACKEND_URL, encryptionKey } from '../../lib/constants';
-import { encryptText } from '../../lib/services/encryptText';
-import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
+import { encryptionKey } from '../../lib/constants';
+import { EncryptText } from '../../lib/services/EncryptText';
 import { ReactComponent as DownloadButtonIcon } from '../../assets/download_button.svg';
+import { ReactComponent as PlaceholderIcon } from '../../assets/placeholder.svg';
 import { ReactComponent as RemoveButtonIcon } from '../../assets/remove_button.svg';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
+import fetch_api from '../../lib/services/api_util';
 
 const AddUserContainer = styled.div`
 	display: flex;
@@ -315,24 +316,18 @@ function AddUser() {
 		setIsLoading(true);
 
 		try {
-			const data = new FormData();
-			data.append('name', formData.name);
-			data.append('email', formData.email);
-			data.append(
+			const body = new FormData();
+			body.append('name', formData.name);
+			body.append('email', formData.email);
+			body.append(
 				'password',
-				await encryptText(formData.password, encryptionKey),
+				await EncryptText(formData.password, encryptionKey),
 			);
-			data.append('file', formData.image);
+			body.append('file', formData.image);
 
-			const requestOptions = {
-				method: 'POST',
-				body: data,
-				credentials: 'include',
-			};
+			console.log(body);
 
-			const response = await fetch(`${BACKEND_URL}/v1/user`, requestOptions);
-			const result = await response.json();
-
+			const result = await fetch_api('POST', '/v1/user', body);
 			if (result.success === false) {
 				toast.error(result.error);
 				return;
