@@ -4,7 +4,7 @@ import ModalComponent from '../modal/Modal';
 import { ReactComponent as DropDown } from '../../assets/drop_down.svg';
 import { ReactComponent as LogoutIcon } from '../../assets/logout_icon.svg';
 import { logoutUser } from '../../lib/services/LogoutUser';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const ProfileContainer = styled.div`
 	position: relative;
@@ -111,6 +111,33 @@ function Profile() {
 		setIsGlobalModalOpen(true);
 	};
 
+	const logoutRef = useRef(null);
+	useEffect(() => {
+		function handleClickOutside(event) {
+			if (!logoutRef.current.contains(event.target)) {
+				setIsProfileModalOpen(false);
+			}
+		}
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth <= 865) {
+				setIsProfileModalOpen(false);
+			}
+		};
+
+		window.addEventListener('resize', handleResize);
+		handleResize();
+
+		return () => window.removeEventListener('resize', handleResize);
+	}, [setIsProfileModalOpen]);
+
 	return (
 		<>
 			<ModalComponent
@@ -119,7 +146,7 @@ function Profile() {
 				message='You have been successfully logout '
 				onClose={closeGlobalModal}
 			/>
-			<ProfileContainer>
+			<ProfileContainer ref={logoutRef}>
 				{user.name && user.image && (
 					<ProfileContent onClick={toggleModal}>
 						<ProfileImage src={user?.image || profilePic} alt='profile' />

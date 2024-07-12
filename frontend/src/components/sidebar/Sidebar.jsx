@@ -89,10 +89,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 			}
 		}
 
-		// Add event listener
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
-			// Remove event listener on cleanup
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, [setSidebarOpen]);
