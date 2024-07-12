@@ -58,10 +58,7 @@ function App() {
 					</Routes>
 				) : isHealthCheckComplete ? (
 					<Routes>
-						<Route
-							path='/login'
-							element={<LoginPage />}
-						/>
+						<Route path='/login' element={<LoginPage setUser={setUser} />} />
 						<Route
 							path='/'
 							element={<Layout user={user} Component={<ShowUser />} />}

@@ -19,26 +19,33 @@ const UserListItemContainer = styled.div`
 	}
 `;
 
-const UserListItemImageError = styled.div`
+const UserListItemImageAlternative = styled.div`
 	display: flex;
 	width: 100%;
 	height: 100%;
-	min-height: 300px;
+	min-height: ${(props) => (props.isLoading ? '350px' : 'none')};
 	align-items: center;
 	justify-content: center;
 	font-family: 'Outfit', sans-serif;
 	font-size: 2em;
 	font-weight: 400;
 	border-radius: 16px 16px 0 0;
+	@media screen and (max-width: 436px) {
+		min-height: 194.5px;
+	}
+	@media screen and (max-width: 376px) {
+		min-height: 173.5px;
+	}
+	@media screen and (max-width: 321px) {
+		min-height: 146px;
+	}
 `;
 
 const UserListItemImage = styled.img`
 	width: 100%;
-	height: 100%;
+	height: auto;
 	object-fit: cover;
 	border-radius: 16px 16px 0 0;
-	@media screen and (max-width: 500px) {
-	}
 `;
 
 const UserListItemContent = styled.div`
@@ -96,9 +103,42 @@ const DeleteButton = styled.button`
 		color: #ff0000;
 	}
 `;
+const Loader = styled.span`
+	width: 5rem;
+	height: 5rem;
+	border: 10px solid #e2e2e2;
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+
+	@media screen and (max-width: 1250px) {
+		width: 4.5rem;
+		height: 4.5rem;
+		border: 8px solid #e2e2e2;
+		border-bottom-color: transparent;
+	}
+	@media screen and (max-width: 450px) {
+		width: 4rem;
+		height: 4rem;
+		border: 8px solid #e2e2e2;
+		border-bottom-color: transparent;
+	}
+
+	@keyframes rotation {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+`;
 
 function UserListItem({ id, title, email, picture, onDeleted }) {
-	const [imageError, setImageError] = useState(false);
+	const [imageAlternative, setImageAlternative] = useState('');
+	const [imageLoading, setImageLoading] = useState(true);
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const handleDelete = async (id) => {
@@ -122,20 +162,39 @@ function UserListItem({ id, title, email, picture, onDeleted }) {
 		}
 	};
 
+	const handleImageLoad = () => {
+		setImageLoading(false);
+	};
+
+	const setImageError = () => {
+		setImageLoading(true);
+		setImageAlternative('No Image Found');
+	};
+
 	return (
 		<UserListItemContainer deleting={isDeleting}>
 			<DeleteButton onClick={() => handleDelete(id)} disabled={isDeleting}>
 				X
 			</DeleteButton>
-			{picture && !imageError ? (
+			{picture && (
 				<UserListItemImage
 					src={picture}
 					alt={email}
-					onError={() => setImageError(true)}
-					loading='lazy'
+					onError={setImageError}
+					onLoad={handleImageLoad}
+					style={{ display: imageLoading ? 'none' : 'block' }}
 				/>
-			) : (
-				<UserListItemImageError>No Image Found</UserListItemImageError>
+			)}
+			{imageLoading && (
+				<UserListItemImageAlternative isLoading={imageLoading}>
+					{picture === null ? (
+						'No Image Found'
+					) : imageAlternative === '' ? (
+						<Loader />
+					) : (
+						imageAlternative
+					)}
+				</UserListItemImageAlternative>
 			)}
 			<UserListItemContent>
 				<Bold>{title ? title : `...`}</Bold>

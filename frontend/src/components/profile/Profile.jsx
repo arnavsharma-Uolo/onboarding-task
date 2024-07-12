@@ -8,6 +8,13 @@ import { useState } from 'react';
 
 const ProfileContainer = styled.div`
 	position: relative;
+	display: flex;
+	box-sizing: border-box;
+	align-items: center;
+	height: 4rem;
+	@media screen and (max-width: 870px) {
+		height: 1.5rem;
+	}
 `;
 
 const ProfileContent = styled.div`
@@ -113,13 +120,15 @@ function Profile() {
 				onClose={closeGlobalModal}
 			/>
 			<ProfileContainer>
-				<ProfileContent onClick={toggleModal}>
-					<ProfileImage src={user?.image || profilePic} alt='profile' />
-					<ProfileText>
-						{user?.name ? user.name.split(' ')[0] : 'User'}
-					</ProfileText>
-					<DropDownIcon />
-				</ProfileContent>
+				{user.name && user.image && (
+					<ProfileContent onClick={toggleModal}>
+						<ProfileImage src={user?.image || profilePic} alt='profile' />
+						<ProfileText>
+							{user?.name ? user.name.split(' ')[0] : 'User'}
+						</ProfileText>
+						<DropDownIcon />
+					</ProfileContent>
+				)}
 				{isProfileModalOpen && (
 					<ProfileModal onClick={handleLogout}>
 						<LogoutIcon />

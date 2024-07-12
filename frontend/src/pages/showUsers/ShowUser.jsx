@@ -52,7 +52,9 @@ const CancelIcon = styled(ClearIconSVG)`
 	transform: translateY(-50%);
 	right: 10rem;
 	width: 20px;
+	opacity: ${(props) => (props.closed ? '0' : '1')};
 	height: auto;
+	transition: all 0.3s ease;
 
 	&:hover {
 		cursor: pointer;
@@ -145,7 +147,7 @@ function ShowUser() {
 						onChange={handleInputChange}
 					/>
 					<SearchButton>Search</SearchButton>
-					<CancelIcon onClick={() => setSearchQuery('')} />
+					<CancelIcon onClick={() => setSearchQuery('')} closed={searchQuery === ''} />
 				</SearchInputContainer>
 				<div>
 					<UserList searchQuery={debouncedSearchQuery} />

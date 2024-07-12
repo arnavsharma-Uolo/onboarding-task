@@ -161,7 +161,7 @@ const Loader = styled.span`
 	}
 `;
 
-function LoginPage() {
+function LoginPage({ setUser }) {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState('');
@@ -197,6 +197,7 @@ function LoginPage() {
 			const response = await loginUser(body);
 
 			if (response.success) {
+				setUser(response.data);
 				handleSuccess(response.data);
 			} else {
 				setError(response.error);
